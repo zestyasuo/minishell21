@@ -6,7 +6,7 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 16:10:08 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/03/07 16:17:41 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/03/07 22:27:35 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,16 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <ft_printf.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# define ARGERROR "Error. Minishell shall only be started without arguments.\n"
+# define MAXARGLEN 1024
 
-void	print_hello(void);
-
+void	clear(void);
+void	exec_input(char *input);
+int		read_input(char *input);
 
 #endif

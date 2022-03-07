@@ -1,5 +1,5 @@
 CC			=	clang
-CFLAGS		=	-Wall -Wextra -Werror
+CFLAGS		=	-Wall -Wextra -Werror -g
 NAME		=	minishell
 
 SRC			=	minishell.c			\
@@ -11,7 +11,6 @@ OBJ_PATH	=	./objects/
 SRC_PATH	=	./src/
 INC_PATH	=	./include/
 HEADERS		=	minishell.h		\
-				libshell.h		\
 
 FT_PRINTF 	=	src/libftprintf.a 
 
@@ -34,7 +33,7 @@ ${OBJ_PATH}%.o : ${SRC_PATH}%.c ${HEAD_DEP} | ${OBJ_PATH}
 	@${CC} ${CFLAGS} -o $@ -c $< -I${INC_PATH} -I${FT_PRINTF_PATH}
 
 ${NAME} : ${FT_PRINTF} ${OBJ}
-	@${CC} ${CFLAGS} -o $@ ${FT_PRINTF} $^
+	@${CC} ${CFLAGS} -o $@  $^ ${FT_PRINTF} -lreadline
 	@echo "✅ Your ${NAME} is ready to fly."
 
 clean :
