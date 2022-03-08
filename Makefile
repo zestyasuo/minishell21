@@ -4,6 +4,7 @@ NAME		=	minishell
 
 SRC			=	minishell.c			\
 				minishell_utils.c	\
+				built_in_1.c		\
 
 FT_PRINTF_PATH	=	./ft_printf/
 

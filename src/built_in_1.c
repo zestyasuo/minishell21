@@ -1,43 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   built_in_1.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/07 17:39:28 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/03/08 23:08:47 by zyasuo           ###   ########.fr       */
+/*   Created: 2022/03/08 22:50:05 by zyasuo            #+#    #+#             */
+/*   Updated: 2022/03/08 23:16:30 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-static void	arrayclr(char **array)
+void	pwd(void)
+{
+	char	buf[1024];
+
+	getcwd(buf, sizeof(buf));
+	ft_printf("%s\n", buf);
+}
+
+void	cd(char **path)
 {
 	int	i;
 
 	i = 0;
-	while (array[i])
-		free(array[i++]);
-	free(array);
+	while (path[i])
+		i++;
+	if (i > 2)
+		print_error("Too many arguments");
+	if (!chdir(path[1]))
+		return ;
+	perror("cd ");
 }
 
-int	main(int argc, char **argv)
+void	clear(void)
 {
-	char	input[MAXARGLEN];
-	char	**parsed_args;
-
-	(void) argv;
-	if (argc > 1)
-		return (0 * ft_printf(ARGERROR));
-	clear();
-	ft_printf("Welcome to Minishell!\n");
-	while (1)
-	{
-		if (!read_input(input))
-			continue ;
-		parsed_args = ft_split(input, ' ');
-		exec_input(parsed_args);
-	}
-	arrayclr(parsed_args);
+	ft_printf("\033[H\033[J");
 }

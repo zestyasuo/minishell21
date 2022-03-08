@@ -6,15 +6,15 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:46:47 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/03/07 22:50:10 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/03/08 23:15:13 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void	clear(void)
+void	print_error(char *error)
 {
-	ft_printf("\033[H\033[J");
+	write(2, error, ft_strlen(error));
 }
 
 int	read_input(char *input)
@@ -31,19 +31,16 @@ int	read_input(char *input)
 	return (0);
 }
 
-void	pwd(void)
+void	exec_input(char **input)
 {
-	char	buf[1024];
-
-	getcwd(buf, sizeof(buf));
-	ft_printf("%s\n", buf);
-}
-
-void	exec_input(char *input)
-{
-
-	if (!ft_strncmp("pwd", input, 3))
+	if (!ft_strncmp("pwd", input[0], ft_strlen(input[0])))
 		pwd();
-	if (!ft_strncmp("exit", input, 4))
+	else if (!ft_strncmp("exit", input[0], ft_strlen(input[0])))
 		exit(0);
+	else if (!ft_strncmp("clear", input[0], ft_strlen(input[0])))
+		clear();
+	else if (!ft_strncmp("cd", input[0], ft_strlen(input[0])))
+		cd(input);
+	else
+		print_error("Such word are beyond my humble comprehension\n");
 }
