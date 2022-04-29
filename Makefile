@@ -1,40 +1,55 @@
 CC			=	clang
-CFLAGS		=	-Wall -Wextra -Werror
-NAME		=	minishell
+CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=address
+
+NAME = minishell
 
 SRC			=	minishell.c			\
 				minishell_utils.c	\
+				built_in_1.c		\
+				built_in_2.c		\
+				next_line.c			\
+				create_shell.c		\
+				parse_args.c		\
+				get_args.c			\
+				get_environ.c		\
+				list_utils.c		\
+				expand_variables.c  \
+				action_branch.c
+				
+FT_PRINTF_PATH	=	./ft_printf/include
 
-FT_PRINTF_PATH	=	./ft_printf/
+OBJ_PATH	=	objects
+SRC_PATH	=	src
+INC_PATH	=	include
 
-OBJ_PATH	=	./objects/
-SRC_PATH	=	./src/
-INC_PATH	=	./include/
 HEADERS		=	minishell.h		\
-				libshell.h		\
 
-FT_PRINTF 	=	src/libftprintf.a 
+FT_PRINTF 	=	ft_printf/libftprintf.a 
 
-HEAD_DEP	=	${HEADERS:%.h=${INC_PATH}%.h}
+HEAD_DEP	=	${HEADERS:%.h=${INC_PATH}/%.h}
 
-OBJ			=	${SRC:%.c=${OBJ_PATH}%.o}
+OBJ			=	${SRC:%.c=${OBJ_PATH}/%.o}
 
 .PHONY	:	all re clean fclean ${FT_PRINTF}
 
 all : ${NAME}
 
+ifneq ($(shell ${MAKE} -q -C ft_printf/ ; echo $$? ), 0)
+${NAME} : ${FT_PRINTF}
+endif
+
 ${FT_PRINTF}:
 	@echo "Making the library."
-	@${MAKE} -s -C ${FT_PRINTF_PATH}
+	${MAKE} -j -s -C ft_printf/
 
 ${OBJ_PATH}:
 	@mkdir ${OBJ_PATH}
 
-${OBJ_PATH}%.o : ${SRC_PATH}%.c ${HEAD_DEP} | ${OBJ_PATH}
-	@${CC} ${CFLAGS} -o $@ -c $< -I${INC_PATH} -I${FT_PRINTF_PATH}
+${OBJ_PATH}/%.o : ${SRC_PATH}/%.c ${HEAD_DEP} | ${OBJ_PATH}
+	${CC} ${CFLAGS} -o $@ -c $< -I${INC_PATH} -I${FT_PRINTF_PATH}
 
-${NAME} : ${FT_PRINTF} ${OBJ}
-	@${CC} ${CFLAGS} -o $@ ${FT_PRINTF} $^
+${NAME} : ${OBJ}
+	${CC} ${CFLAGS} -o $@  $^ ${FT_PRINTF} -lreadline
 	@echo "✅ Your ${NAME} is ready to fly."
 
 clean :
@@ -47,4 +62,4 @@ fclean : clean
 
 re:
 	@echo "Rebuilding..."
-	@${MAKE} -s fclean all
+	${MAKE} fclean all
