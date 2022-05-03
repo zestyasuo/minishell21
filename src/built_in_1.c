@@ -6,13 +6,13 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 22:50:05 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/03/08 23:16:30 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/04/26 13:21:31 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "../include/minishell.h"
 
-void	pwd(void)
+void	mini_pwd(void)
 {
 	char	buf[1024];
 
@@ -20,7 +20,7 @@ void	pwd(void)
 	ft_printf("%s\n", buf);
 }
 
-void	cd(char **path)
+void	mini_cd(char **path)
 {
 	int	i;
 
@@ -34,7 +34,34 @@ void	cd(char **path)
 	perror("cd ");
 }
 
-void	clear(void)
+void	mini_echo(char **args)
+{
+	int		i;
+	int		endl;
+
+	if (!args[1])
+	{
+		write(1, "\n", 1);
+		return ;
+	}
+	endl = !ft_strncmp("-n", args[1], ft_strlen(args[1]));
+	if (!args[2] && endl)
+		return ;
+	i = 1 + endl;
+	while (args[i + 1])
+		ft_printf("%s ", args[i++]);
+	ft_printf("%s", args[i]);
+	if (!endl)
+		write(1, "\n", 1);
+}
+
+void	shell_exit(int code)
+{
+	write(1, "exit\n", 5);
+	exit(code);
+}
+
+void	mini_clear(void)
 {
 	ft_printf("\033[H\033[J");
 }

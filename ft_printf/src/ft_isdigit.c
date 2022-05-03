@@ -1,21 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/26 16:13:59 by zyasuo            #+#    #+#             */
-/*   Updated: 2021/10/26 16:13:59 by zyasuo           ###   ########.fr       */
+/*   Created: 2021/10/06 20:31:32 by zyasuo            #+#    #+#             */
+/*   Updated: 2021/10/06 20:31:32 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
-# include<stdarg.h>
-# include"libft/libft.h"
+#include"../include/libft.h"
 
-int		ft_printf(const char *format, ...);
-int		ft_putnbr_base(unsigned long nbr, char *base);
-
-#endif
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
+}
