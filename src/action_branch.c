@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/04/30 01:12:04 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:59:50 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,57 +46,18 @@ void run_builtin(char **arr, char **envp)
 	return ;
 }
 
-int ft_isstr(char **arr, char *str)
+int ft_isstr(t_list *column, char *str)
 {
-	int	i;
+	t_list	*lst;
 	
-	i = 0;
-	while (arr[i])
+	lst = column->content;
+	while (lst)
 	{
-		if (!ft_strcmp(arr[i], str))
+		if (!ft_strcmp(lst->content, str))
 			return (1);
-		i++;
+		lst = lst->next;
 	}
 	return (0);
-}
-
-void	change_in(char **arr, char **envp, int *pipe)
-{
-	int	fd;
-
-	fd = open(arr[1], O_RDONLY);
-	if (fd < 0)
-		perror(arr[1]);
-	else
-		dup2(fd, STDIN_FILENO);
-	close(fd);
-	if (arr && arr[2] && execve(arr[2], &arr[2], envp))
-		perror(arr[2]);
-	free(arr);
-	free(pipe);
-	execve("./minishell", envp, envp);
-}
-
-void	change_out(char **arr, char **envp, int *pipe)
-{
-	int	fd;
-	int	i;
-
-	i = 0;
-	while (ft_strcmp(arr[i], ">"))
-		i++;
-	fd = open(arr[i + 1], O_WRONLY | O_CREAT, 0644);
-	if (fd < 0)
-		perror(arr[i + 1]);
-	else
-		dup2(fd, STDOUT_FILENO);
-	arr[i] = 0;
-	close(fd);
-	if (execve(arr[0], &arr[0], envp))
-		perror(arr[0]);
-	free(arr);
-	free(pipe);
-	execve("./minishell", envp, envp);
 }
 
 char	**get_args_to_exec(t_list *column)
@@ -120,6 +81,141 @@ char	**get_args_to_exec(t_list *column)
 	return (args);
 }
 
+char	**change_in(t_list *column)
+{
+	int		fd;
+	t_list	*lst_1;
+	t_list	*lst_2;
+	
+	lst_1 = column->content;
+	lst_2 = column->content;
+	while (ft_strcmp(lst_1->content, "<"))
+		lst_1 = lst_1->next;
+	fd = open(lst_1->next->content, O_RDONLY);
+	if (fd < 0)
+	{
+		perror(lst_1->next->content);
+		return (0);
+	}
+	dup2(fd, STDIN_FILENO);
+	close(fd);
+	if (lst_1 == lst_2)
+		column->content = lst_1->next->next;
+	while (lst_2 != lst_1 && lst_2->next != lst_1)
+		lst_2 = lst_2->next;
+	if (lst_2 != lst_1)
+		lst_2->next = lst_1->next->next;
+	lst_1->next->next = 0;
+	ft_lstclear(&lst_1, free);
+	return (get_args_to_exec(column));
+}
+
+char	**change_out(t_list *column)
+{
+	int		fd;
+	t_list	*lst_1;
+	t_list	*lst_2;
+	
+	lst_1 = column->content;
+	lst_2 = column->content;
+	while (ft_strcmp(lst_1->content, ">") && ft_strcmp(lst_1->content, ">>"))
+		lst_1 = lst_1->next;
+	if (ft_strcmp(lst_1->content, ">") == 0)
+		fd = open(lst_1->next->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	else
+		fd = open(lst_1->next->content, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd < 0)
+	{
+		perror(lst_1->next->content);
+		return (0);
+	}
+	dup2(fd, STDOUT_FILENO);
+	close(fd);
+	if (lst_1 == lst_2)
+		column->content = lst_1->next->next;
+	while (lst_2 != lst_1 && lst_2->next != lst_1)
+		lst_2 = lst_2->next;
+	if (lst_2 != lst_1)
+		lst_2->next = lst_1->next->next;
+	lst_1->next->next = 0;
+	ft_lstclear(&lst_1, free);
+	return (get_args_to_exec(column));
+}
+
+char	**set_delim(t_list *column)
+{
+	int		fd;
+	t_list	*lst_1;
+	t_list	*lst_2;
+	char	*str[2];
+	
+	lst_1 = column->content;
+	lst_2 = column->content;
+	while (ft_strcmp(lst_1->content, "<<"))
+		lst_1 = lst_1->next;
+	fd = open("tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd < 0)
+	{
+		perror(lst_1->next->content);
+		return (0);
+	}
+	str[0] = readline("> ");
+	while (ft_strcmp(str[0], lst_1->next->content))
+	{
+		write(fd, str[0], ft_strlen(str[0]));
+		write(fd, "\n", 1);
+		free(str[0]);
+		str[0] = readline("> ");
+	}
+	free(str[0]);
+	close(fd);
+	if (lst_1 == lst_2)
+		column->content = lst_1->next->next;
+	while (lst_2 != lst_1 && lst_2->next != lst_1)
+		lst_2 = lst_2->next;
+	if (lst_2 != lst_1)
+		lst_2->next = lst_1->next->next;
+	lst_1->next->next = 0;
+	ft_lstclear(&lst_1, free);
+	fd = open("tmp", O_RDONLY);
+	if (fd < 0)
+	{
+		perror(lst_1->next->content);
+		return (0);
+	}
+	dup2(fd, STDIN_FILENO);
+	close(fd);
+	return (get_args_to_exec(column));
+}
+
+char	**change_in_out_delim(t_list *column)
+{
+	char	**arr;
+	
+	arr = 0;
+	if (ft_isstr(column, "<<"))
+	{
+		arr = set_delim(column);
+		if (!arr)
+			return (0);
+	}
+	else if (ft_isstr(column, "<"))
+	{
+		arr = change_in(column);
+		if (!arr)
+			return (0);
+	}
+	if (ft_isstr(column, ">") || ft_isstr(column, ">>"))
+	{
+		if (arr)
+			free(arr);
+		arr = change_out(column);
+		if (!arr)
+			return (0);
+	}
+	return (arr);
+}
+
 void run_bins(t_list *column, char **envp, int *fd, int i)
 {
 	char **arr;
@@ -128,17 +224,19 @@ void run_bins(t_list *column, char **envp, int *fd, int i)
 		dup2(fd[2 * i + 1], STDOUT_FILENO);
 	if (i)
 		dup2(fd[2 * i - 2], STDIN_FILENO);
-	arr = get_args_to_exec(column);
-	if (!ft_strcmp(arr[0], "<"))
-		change_in(arr, envp, fd);
-	else if (ft_isstr(arr, ">"))
-		change_out(arr, envp, fd);
+	if (ft_isstr(column, "<") || ft_isstr(column, ">")
+		|| ft_isstr(column, ">>") || ft_isstr(column, "<<"))
+		arr = change_in_out_delim(column);
+	else
+		arr = get_args_to_exec(column);
 	if (arr && arr[0] && arr[0][0] != '.' && arr[0][1] != '/')
 		run_builtin(arr, envp);
 	else if (arr && arr[0] && execve(arr[0], &arr[0], envp))
 		perror(arr[0]);
-	free(arr);
-	free(fd);
+	if (arr)
+		free(arr);
+	if (fd)
+		free(fd);
 	execve("./minishell", envp, envp);
 }
 
@@ -178,5 +276,5 @@ void	action_branch(t_mini *shell, char **envp)
 		waitpid(0, &pid, 0);
 		i--;
 	}
-	change_returned_value(shell->var_list, WEXITSTATUS(pid));//////////////////////////////////
+	change_returned_value(shell->var_list, WEXITSTATUS(pid));
 }
