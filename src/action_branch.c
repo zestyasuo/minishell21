@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/04 15:59:50 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/04 18:01:19 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ char	**set_delim(t_list *column)
 	lst_2 = column->content;
 	while (ft_strcmp(lst_1->content, "<<"))
 		lst_1 = lst_1->next;
-	fd = open("tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open("/tmp/here-doc-minishell", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
 		perror(lst_1->next->content);
@@ -177,7 +177,7 @@ char	**set_delim(t_list *column)
 		lst_2->next = lst_1->next->next;
 	lst_1->next->next = 0;
 	ft_lstclear(&lst_1, free);
-	fd = open("tmp", O_RDONLY);
+	fd = open("/tmp/here-doc-minishell", O_RDONLY);
 	if (fd < 0)
 	{
 		perror(lst_1->next->content);
@@ -229,7 +229,7 @@ void run_bins(t_list *column, char **envp, int *fd, int i)
 		arr = change_in_out_delim(column);
 	else
 		arr = get_args_to_exec(column);
-	if (arr && arr[0] && arr[0][0] != '.' && arr[0][1] != '/')
+	if (arr && arr[0] && (!ft_strncmp(arr[0], "./", 2) && !ft_strncmp(arr[0], "/bin", 4)))
 		run_builtin(arr, envp);
 	else if (arr && arr[0] && execve(arr[0], &arr[0], envp))
 		perror(arr[0]);
