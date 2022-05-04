@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:39:28 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/04/30 01:04:14 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/05 01:27:13 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	loop_shell(t_mini *shell, char **envp)
 		action_branch(shell, envp);//////////////////////////////////
 		ft_lstclear(&shell->args, clear_content);
 		free(input);
+		check_returned_value(shell->var_list);
 	}
 }
 

@@ -6,22 +6,69 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/04 18:01:19 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/05 01:34:53 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+void	get_exit_code(t_list *var_list)
+{
+	t_list	*lst;
+	t_variable	*var;
+
+	lst = var_list;
+	while (lst)
+	{
+		var = lst->content;
+		free(var->name);
+		free(var->value);
+		free(var);
+		lst = lst->next;
+		free(var_list);
+		var_list = lst;
+	}
+	exit(0);
+}
+
+void	check_returned_value(t_list *env_list)
+{
+	t_list		*var_list;
+	t_variable	*var;
+
+	var_list = env_list;
+	while (env_list && env_list->next)
+		env_list = env_list->next;
+	var = env_list->content;
+	if (!ft_strcmp(var->value, "255"))
+		get_exit_code(var_list);
+	printf("returned = %s | %s\n", var->name, var->value);///////////////
+	return ;
+}
+
 void	change_returned_value(t_list *env_list, unsigned char num)
 {
 	t_variable	*var;
 
-	while (env_list->next)
+	while (env_list && env_list->next)
 		env_list = env_list->next;
 	var = env_list->content;
 	if (var->value)
 		free(var->value);
 	var->value = ft_itoa(num);
+}
+
+void	close_fd(int *fd, int size)
+{
+	if (fd == 0)
+		return ;
+	while (size > 0)
+	{
+		size--;
+		close(2 * size + 1);
+		close(2 * size);
+	}
+	free(fd);
 }
 
 void	free_array(char	**arr)
@@ -91,6 +138,8 @@ char	**change_in(t_list *column)
 	lst_2 = column->content;
 	while (ft_strcmp(lst_1->content, "<"))
 		lst_1 = lst_1->next;
+	if (lst_1->next == 0 && ft_putstr_fd("minishell: syntax error\n", 2))
+		return (0);
 	fd = open(lst_1->next->content, O_RDONLY);
 	if (fd < 0)
 	{
@@ -120,6 +169,8 @@ char	**change_out(t_list *column)
 	lst_2 = column->content;
 	while (ft_strcmp(lst_1->content, ">") && ft_strcmp(lst_1->content, ">>"))
 		lst_1 = lst_1->next;
+	if (lst_1->next == 0 && ft_putstr_fd("minishell: syntax error\n", 2))
+		return (0);
 	if (ft_strcmp(lst_1->content, ">") == 0)
 		fd = open(lst_1->next->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else
@@ -153,6 +204,8 @@ char	**set_delim(t_list *column)
 	lst_2 = column->content;
 	while (ft_strcmp(lst_1->content, "<<"))
 		lst_1 = lst_1->next;
+	if (lst_1->next == 0 && ft_putstr_fd("minishell: syntax error\n", 2))
+		return (0);
 	fd = open("/tmp/here-doc-minishell", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
@@ -229,15 +282,16 @@ void run_bins(t_list *column, char **envp, int *fd, int i)
 		arr = change_in_out_delim(column);
 	else
 		arr = get_args_to_exec(column);
-	if (arr && arr[0] && (!ft_strncmp(arr[0], "./", 2) && !ft_strncmp(arr[0], "/bin", 4)))
-		run_builtin(arr, envp);
+	if (fd)
+		free(fd);
+	if (arr && arr[0] && (ft_strncmp(arr[0], "./", 2) && ft_strncmp(arr[0], "/bin/", 5)))
+		exec_input(arr, envp);
 	else if (arr && arr[0] && execve(arr[0], &arr[0], envp))
 		perror(arr[0]);
 	if (arr)
 		free(arr);
-	if (fd)
-		free(fd);
-	execve("./minishell", envp, envp);
+	exit(127);
+	//execve("./minishell", envp, envp);
 }
 
 void	action_branch(t_mini *shell, char **envp)
@@ -249,10 +303,12 @@ void	action_branch(t_mini *shell, char **envp)
 	int		i;
 
 	i = 0;
+	fd = 0;
 	columns = shell->args;
 	size = ft_lstsize(columns);
-	fd = malloc(sizeof(*fd) * (size * 2 - 2));
-	if (!fd)
+	if (ft_lstsize(columns) - 1 > 0)
+		fd = malloc(sizeof(*fd) * (size * 2 - 2));
+	if (size - 1 > 0 && !fd)
 		return ;
 	while (i / 2 != size - 1)
 	{
@@ -270,11 +326,11 @@ void	action_branch(t_mini *shell, char **envp)
 		columns = columns->next;
 		i++;
 	}
-	free(fd);
 	while (i)
 	{
 		waitpid(0, &pid, 0);
 		i--;
 	}
+	close_fd(fd, size);
 	change_returned_value(shell->var_list, WEXITSTATUS(pid));
 }

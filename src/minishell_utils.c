@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:46:47 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/04/25 18:24:41 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/05 00:56:12 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	exec_input(char **input, char **envp)
 	if (!ft_strcmp("pwd", input[0]))
 		mini_pwd();
 	else if (!ft_strcmp("exit", input[0]))
-		shell_exit(0);
+		shell_exit(255);
 	else if (!ft_strcmp("clear", input[0]))
 		mini_clear();
 	else if (!ft_strcmp("cd", input[0]))
@@ -32,7 +32,13 @@ void	exec_input(char **input, char **envp)
 	else if (!ft_strcmp("env", input[0]))
 		mini_env(envp);
 	else
+	{
 		print_error("Such words are beyond my comprehension\n");
+		return ;
+	}
+	if (input)
+		free(input);
+	exit(0);
 }
 	// else if ("export")
 	// 	export();
