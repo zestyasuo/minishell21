@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_1.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 22:50:05 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/04/26 13:21:31 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/05 15:28:02 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ void	mini_cd(char **path)
 	if (!chdir(path[1]))
 		return ;
 	perror("cd ");
+	if (path)
+		free(path);
 }
 
 void	mini_echo(char **args)

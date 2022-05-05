@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/05 14:54:30 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/05 15:29:10 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -315,6 +315,8 @@ void	action_branch(t_mini *shell, char **envp)
 		pipe(&fd[i]);
 		i += 2;
 	}
+	if (columns->next == 0 && !ft_strcmp(((t_list *)(columns->content))->content, "cd"))
+		mini_cd(get_args_to_exec(columns));
 	i = 0;
 	while (columns)
 	{

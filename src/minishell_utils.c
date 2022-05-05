@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:46:47 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/05 00:56:12 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/05 15:37:09 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	exec_input(char **input, char **envp)
 	else if (!ft_strcmp("clear", input[0]))
 		mini_clear();
 	else if (!ft_strcmp("cd", input[0]))
-		mini_cd(input);
+		ft_putstr_fd("cd : Bad adress\n", 1);//mini_cd(input);
 	else if (!ft_strcmp("echo", input[0]))
 		mini_echo(input);
 	else if (!ft_strcmp("env", input[0]))
