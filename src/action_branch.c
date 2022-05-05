@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/05 01:34:53 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/05 14:54:30 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	check_returned_value(t_list *env_list)
 	var = env_list->content;
 	if (!ft_strcmp(var->value, "255"))
 		get_exit_code(var_list);
-	printf("returned = %s | %s\n", var->name, var->value);///////////////
+	//printf("returned = %s | %s\n", var->name, var->value);///////////////
 	return ;
 }
 
@@ -326,11 +326,8 @@ void	action_branch(t_mini *shell, char **envp)
 		columns = columns->next;
 		i++;
 	}
-	while (i)
-	{
-		waitpid(0, &pid, 0);
-		i--;
-	}
+	while (waitpid(0, &pid, 0) > 0)
+	{}
 	close_fd(fd, size);
 	change_returned_value(shell->var_list, WEXITSTATUS(pid));
 }
