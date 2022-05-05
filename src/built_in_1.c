@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 22:50:05 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/05 15:28:02 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/05 16:24:54 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	mini_pwd(void)
 	ft_printf("%s\n", buf);
 }
 
-void	mini_cd(char **path)
+void	mini_cd(char **path, char **envp)
 {
 	int	i;
 
@@ -31,9 +31,14 @@ void	mini_cd(char **path)
 		print_error("Too many arguments");
 	if (!chdir(path[1]))
 		return ;
-	perror("cd ");
+	if (envp)
+		perror("cd ");
 	if (path)
 		free(path);
+	if (envp == 0)
+		exit(1);
+	else
+		return ;
 }
 
 void	mini_echo(char **args)

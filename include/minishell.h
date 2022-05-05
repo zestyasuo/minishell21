@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 16:10:08 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/05 01:30:31 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/05 16:24:06 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef struct s_mini {
 
 void	mini_clear(void);
 void	mini_pwd(void);
-void	mini_cd(char **path);
+void	mini_cd(char **path, char **envp);
 void	mini_echo(char **args);
 void	shell_exit(int code);
 void	mini_env(char **envp);
