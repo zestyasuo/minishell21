@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:39:28 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/05 01:27:13 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/06 12:28:06 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	interrupt(int sig)
 void	loop_shell(t_mini *shell, char **envp)
 {
 	char			*input;
-(void)envp;
+	
 	while (1)
 	{
 		if (!read_input(&input))
@@ -64,7 +64,7 @@ int	main(int argc, char **argv, char **envp)
 	sa.sa_handler = &interrupt;
 	sigaction(SIGINT, &sa, NULL);
 	if (argc > 1)
-		return (127);// * ft_printf(ARGERROR));127 - возырвщаемое значение при command no found или no such file or directory
+		return (0 * ft_printf(ARGERROR));
 	if (create_shell(&shell, envp))
 		return (1);
 	loop_shell(shell, envp);

@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/05 16:23:44 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/06 13:58:34 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ void	check_returned_value(t_list *env_list)
 	while (env_list && env_list->next)
 		env_list = env_list->next;
 	var = env_list->content;
+	//printf("returned = %s | %s\n", var->name, var->value);///////////////
 	if (!ft_strcmp(var->value, "255"))
 		get_exit_code(var_list);
-	//printf("returned = %s | %s\n", var->name, var->value);///////////////
 	return ;
 }
 
@@ -62,11 +62,12 @@ void	close_fd(int *fd, int size)
 {
 	if (fd == 0)
 		return ;
+	size--;
 	while (size > 0)
 	{
 		size--;
-		close(2 * size + 1);
-		close(2 * size);
+		close(fd[2 * size + 1]);
+		close(fd[2 * size]);
 	}
 	free(fd);
 }
@@ -128,14 +129,28 @@ char	**get_args_to_exec(t_list *column)
 	return (args);
 }
 
+void	remove_elements(t_list *column, t_list	*lst_1)
+{
+	t_list	*lst_2;
+
+	lst_2 = column->content;
+	if (lst_1 == lst_2)
+		column->content = lst_1->next->next;
+	while (lst_2 != lst_1 && lst_2->next != lst_1)
+		lst_2 = lst_2->next;
+	if (lst_2 != lst_1)
+		lst_2->next = lst_1->next->next;
+	lst_1->next->next = 0;
+	ft_lstclear(&lst_1, free);
+	return ;
+}
+
 char	**change_in(t_list *column)
 {
 	int		fd;
 	t_list	*lst_1;
-	t_list	*lst_2;
 	
 	lst_1 = column->content;
-	lst_2 = column->content;
 	while (ft_strcmp(lst_1->content, "<"))
 		lst_1 = lst_1->next;
 	if (lst_1->next == 0 && ft_putstr_fd("minishell: syntax error\n", 2))
@@ -148,14 +163,7 @@ char	**change_in(t_list *column)
 	}
 	dup2(fd, STDIN_FILENO);
 	close(fd);
-	if (lst_1 == lst_2)
-		column->content = lst_1->next->next;
-	while (lst_2 != lst_1 && lst_2->next != lst_1)
-		lst_2 = lst_2->next;
-	if (lst_2 != lst_1)
-		lst_2->next = lst_1->next->next;
-	lst_1->next->next = 0;
-	ft_lstclear(&lst_1, free);
+	remove_elements(column, lst_1);
 	return (get_args_to_exec(column));
 }
 
@@ -163,10 +171,8 @@ char	**change_out(t_list *column)
 {
 	int		fd;
 	t_list	*lst_1;
-	t_list	*lst_2;
 	
 	lst_1 = column->content;
-	lst_2 = column->content;
 	while (ft_strcmp(lst_1->content, ">") && ft_strcmp(lst_1->content, ">>"))
 		lst_1 = lst_1->next;
 	if (lst_1->next == 0 && ft_putstr_fd("minishell: syntax error\n", 2))
@@ -182,14 +188,7 @@ char	**change_out(t_list *column)
 	}
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
-	if (lst_1 == lst_2)
-		column->content = lst_1->next->next;
-	while (lst_2 != lst_1 && lst_2->next != lst_1)
-		lst_2 = lst_2->next;
-	if (lst_2 != lst_1)
-		lst_2->next = lst_1->next->next;
-	lst_1->next->next = 0;
-	ft_lstclear(&lst_1, free);
+	remove_elements(column, lst_1);
 	return (get_args_to_exec(column));
 }
 
@@ -197,11 +196,9 @@ char	**set_delim(t_list *column)
 {
 	int		fd;
 	t_list	*lst_1;
-	t_list	*lst_2;
 	char	*str[2];
 	
 	lst_1 = column->content;
-	lst_2 = column->content;
 	while (ft_strcmp(lst_1->content, "<<"))
 		lst_1 = lst_1->next;
 	if (lst_1->next == 0 && ft_putstr_fd("minishell: syntax error\n", 2))
@@ -222,14 +219,7 @@ char	**set_delim(t_list *column)
 	}
 	free(str[0]);
 	close(fd);
-	if (lst_1 == lst_2)
-		column->content = lst_1->next->next;
-	while (lst_2 != lst_1 && lst_2->next != lst_1)
-		lst_2 = lst_2->next;
-	if (lst_2 != lst_1)
-		lst_2->next = lst_1->next->next;
-	lst_1->next->next = 0;
-	ft_lstclear(&lst_1, free);
+	remove_elements(column, lst_1);
 	fd = open("/tmp/here-doc-minishell", O_RDONLY);
 	if (fd < 0)
 	{
@@ -269,7 +259,7 @@ char	**change_in_out_delim(t_list *column)
 	return (arr);
 }
 
-void run_bins(t_list *column, char **envp, int *fd, int i)
+char	**replace_fd(t_list *column, int *fd , int i)
 {
 	char **arr;
 
@@ -282,16 +272,20 @@ void run_bins(t_list *column, char **envp, int *fd, int i)
 		arr = change_in_out_delim(column);
 	else
 		arr = get_args_to_exec(column);
-	if (fd)
-		free(fd);
-	if (arr && arr[0] && (ft_strncmp(arr[0], "./", 2) && ft_strncmp(arr[0], "/bin/", 5)))
+	return (arr);
+}
+
+void run_bins(char **arr, char **envp, int *fd, int size)
+{
+	if (arr && arr[0] && (ft_strncmp(arr[0], "./", 2)
+		&& ft_strncmp(arr[0], "/bin/", 5)))
 		exec_input(arr, envp);
 	else if (arr && arr[0] && execve(arr[0], &arr[0], envp))
 		perror(arr[0]);
 	if (arr)
 		free(arr);
+	close_fd(fd, size);
 	exit(127);
-	//execve("./minishell", envp, envp);
 }
 
 void	action_branch(t_mini *shell, char **envp)
@@ -324,12 +318,13 @@ void	action_branch(t_mini *shell, char **envp)
 		if (pid < 0)
 			break ;
 		else if (pid == 0)
-			run_bins(columns, envp, fd, i);
+			run_bins(replace_fd(columns, fd, i), envp, fd, size);
 		columns = columns->next;
 		i++;
+		waitpid(0, &pid, 0);
+		if (WEXITSTATUS(pid) == 127)
+			break ;
 	}
-	while (waitpid(0, &pid, 0) > 0)
-	{}
 	close_fd(fd, size);
 	change_returned_value(shell->var_list, WEXITSTATUS(pid));
 }
