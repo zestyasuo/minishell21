@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 16:10:08 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/05 16:24:06 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/07 00:39:54 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,12 @@ t_list	*get_variable_by_name(t_list *var_list, char *name);
 void	action_branch(t_mini *shell, char **envp);
 void	change_returned_value(t_list *env_list, unsigned char num);
 void	check_returned_value(t_list *env_list);
+char	**change_in_out_delim(t_list *column);
+char	**get_args_to_exec(t_list *column);
+void	remove_elements(t_list *column, t_list	*lst_1);
+char	**set_delim(t_list *column);
+void	close_fd(int *fd, int size);
+int	ft_isstr(t_list *column, char *str);
+
 
 #endif

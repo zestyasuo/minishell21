@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:39:28 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/06 12:28:06 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/07 00:08:33 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	loop_shell(t_mini *shell, char **envp)
 		expand_variables(shell);
 		//print_args(shell->args->content);
 		//ft_lstiter(shell->args, print_args);
+		//second_parser(shell);
 		action_branch(shell, envp);//////////////////////////////////
 		ft_lstclear(&shell->args, clear_content);
 		free(input);
