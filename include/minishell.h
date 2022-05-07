@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 16:10:08 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/07 00:39:54 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/08 01:10:00 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ void	print_error(char *error);
 void	exec_child(char **input, char **envp);
 void	print_content(void *content);
 void	clear_content(void *lst);
+int		add_arg(t_list **list, char *arg);
+void	remove_backslash(void *p);
 
 void	print_content(void *content);
 void	print_args(void *args);
@@ -74,7 +76,7 @@ char	**get_args_to_exec(t_list *column);
 void	remove_elements(t_list *column, t_list	*lst_1);
 char	**set_delim(t_list *column);
 void	close_fd(int *fd, int size);
-int	ft_isstr(t_list *column, char *str);
-
+int		ft_isstr(t_list *column, char *str);
+void	remove_quotes(void *content);
 
 #endif

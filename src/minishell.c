@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:39:28 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/07 00:08:33 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/08 01:19:07 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ void	interrupt(int sig)
 void	loop_shell(t_mini *shell, char **envp)
 {
 	char			*input;
-	
+
+	(void)envp;
 	while (1)
 	{
 		if (!read_input(&input))
@@ -40,10 +41,9 @@ void	loop_shell(t_mini *shell, char **envp)
 			continue ;
 		}
 		expand_variables(shell);
-		//print_args(shell->args->content);
-		//ft_lstiter(shell->args, print_args);
-		//second_parser(shell);
-		action_branch(shell, envp);//////////////////////////////////
+		ft_lstiter(shell->args, remove_quotes);
+		// ft_lstiter(shell->args, print_args);
+		action_branch(shell, envp);
 		ft_lstclear(&shell->args, clear_content);
 		free(input);
 		check_returned_value(shell->var_list);
@@ -58,7 +58,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void) argv;
 	tcgetattr(0, &termios_p);
-	termios_p.c_lflag &= ~(ISIG);//видимо при такой инициализации нет возможности посылать сигналы запускаемым из минишелла процессам
+	termios_p.c_lflag &= ~(ISIG);
 	termios_p.c_cc[VQUIT] = 0;
 	termios_p.c_cc[VINTR] = 3;
 	tcsetattr(0, 0, &termios_p);

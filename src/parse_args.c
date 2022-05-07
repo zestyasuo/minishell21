@@ -6,7 +6,7 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 18:23:32 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/04/26 16:01:15 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/08 00:49:06 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,47 +42,46 @@ char	*get_space_str(char *str)
 
 	i = 0;
 	while (str[i] && !isspace(str[i]) && str[i] != '\'' && str[i] != '\"'
-		&& str[i] != '|')
+		&& str[i] != '|' && str[i] != '>' && str[i] != '<')
 		i++;
 	res = ft_substr(str, 0, i);
 	return (res);
 }
 
-void	remove_backslash(void *p)
+char	*get_redirect_str(char *str, char del)
 {
-	char	*src;
-	char	*dst;
-	char	garbage;
+	int	i;
 
-	garbage = '\\';
-	src = (char *)p;
-	dst = src;
-	while (*src)
-	{
-		*dst = *src;
-		if (*dst != garbage)
-			dst++;
-		src++;
-	}
-	*dst = '\0';
+	i = 0;
+	while (str[i] && str[i] == del)
+		i++;
+	return (ft_substr(str, 0, i));
 }
 
-int	add_arg(t_list **list, char *arg)
+char	*get_new_arg(char *input)
 {
-	int	len;
+	int		i;
+	char	*new_arg;
 
-	if (!arg)
-		return (1);
-	ft_lstadd_back(list, ft_lstnew(arg));
-	len = ft_strlen((char *)ft_lstlast(*list)->content);
-	return (len);
+	i = 0;
+	if (input[i] == '\"' || input[i] == '\'')
+	{
+		new_arg = get_quotestr((input + i), input[i]);
+		return (new_arg);
+	}
+	else if (input[i] == '|')
+		return (ft_substr(input, i, 1));
+	else if (input[i] == '>' || input[i] == '<')
+		return (get_redirect_str(input + i, input[i]));
+	else
+		return (get_space_str(input + i));
 }
 
 t_list	*parse_args(char *input)
 {
 	t_list	*args;
 	int		i;
-	char	*new_string;
+	int		arg_len;
 
 	i = 0;
 	args = 0;
@@ -90,18 +89,10 @@ t_list	*parse_args(char *input)
 	{
 		while (isspace(input[i]) && input[i])
 			i++;
-		if (input[i] == '\"' || input[i] == '\'')
-		{
-			new_string = get_quotestr((input + i), input[i]);
-			if (new_string)
-				i += add_arg(&args, new_string);
-			else
-				i += ft_strlen(&input[i]);
-		}
-		if (input[i] == '|')
-			i += add_arg(&args, ft_substr(input, i, 1));
-		else if (input[i])
-			i += add_arg(&args, get_space_str(input + i));
+		arg_len = add_arg(&args, get_new_arg(input + i));
+		if (!arg_len)
+			i += ft_strlen(input + i);
+		i += arg_len;
 	}
 	ft_lstiter(args, &remove_backslash);
 	return (args);

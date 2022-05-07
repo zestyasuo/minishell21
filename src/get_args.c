@@ -6,26 +6,73 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 22:43:12 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/04/22 19:25:33 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/08 00:47:04 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+int	count_char_in_str(char *str, char c)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			count++;
+		i++;
+	}
+	return (count);
+}
+
+int	is_arg_valid(t_list *arg)
+{
+	int		i;
+	char	*str;
+
+	str = arg->content;
+	i = 0;
+	if (str[i] == '>' || str[i] == '<')
+	{
+		if (count_char_in_str(str, str[i]) > 2)
+			return (0);
+	}
+	return (1);
+}
+
+int	is_program_vaild(t_list *program)
+{
+	t_list	*arg;
+	int		i;
+
+	arg = program;
+	i = 0;
+	while (arg)
+	{
+		if (arg == program && ft_strchr(program->content, '|'))
+			return (0);
+		if (!is_arg_valid(arg))
+			return (0);
+		arg = arg->next;
+	}
+	return (1);
+}
+
 t_list	*valid_args(t_list *args)
 {
-	t_list	*current_list;
-	t_list	*current_el;
+	t_list	*program;
 	int		valid;
 
-	current_list = args;
+	program = args;
 	valid = 1;
-	while (current_list)
+	while (program)
 	{
-		current_el = current_list->content;
-		if (ft_strchr(current_el->content, '|'))
+		if (!is_program_vaild(program->content))
 			valid = 0;
-		current_list = current_list->next;
+		program = program->next;
 	}
 	if (valid)
 		return (args);

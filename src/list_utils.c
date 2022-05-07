@@ -6,22 +6,22 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 16:18:47 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/04/28 18:00:55 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/08 01:17:24 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	print_content(void *content)
-{
-	ft_printf("%s ", (char *)content);
-}
+// void	print_content(void *content)
+// {
+// 	ft_printf("%s ", (char *)content);
+// }
 
-void	print_args(void *args)
-{
-	ft_lstiter((t_list *) args, print_content);
-	ft_printf("\n");
-}
+// void	print_args(void *args)
+// {
+// 	ft_lstiter((t_list *) args, print_content);
+// 	ft_printf("\n");
+// }
 
 void	clear_content(void *lst)
 {
@@ -42,4 +42,21 @@ t_list	*get_variable_by_name(t_list *var_list, char *name)
 		current = current->next;
 	}
 	return (NULL);
+}
+
+void	str_remove_cage_quotes(void *content)
+{
+	char	*str;
+
+	str = (char *)content;
+	if (str[0] == '\'' || str[0] == '\"')
+	{
+		ft_memmove(&str[0], &str[1], ft_strlen(str));
+		str[ft_strlen(str + 1)] = '\0';
+	}
+}
+
+void	remove_quotes(void *content)
+{
+	ft_lstiter((t_list *) content, str_remove_cage_quotes);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variables.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 23:04:10 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/04/29 16:25:14 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/07 20:16:33 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,6 @@ void	expand_variable(t_list *arg, t_list *var_list)
 		var_name = get_next_var_name(arg->content);
 	}
 }
-
 
 void	expand_variables(t_mini *shell)
 {

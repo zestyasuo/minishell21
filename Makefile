@@ -10,6 +10,7 @@ SRC			=	minishell.c			\
 				next_line.c			\
 				create_shell.c		\
 				parse_args.c		\
+				parse_utils.c		\
 				get_args.c			\
 				get_environ.c		\
 				list_utils.c		\
@@ -17,7 +18,7 @@ SRC			=	minishell.c			\
 				action_branch.c		\
 				action_utils.c		\
 				change_in_out.c		\
-				here_doc.c			
+				here_doc.c			\
 				
 FT_PRINTF_PATH	=	./ft_printf/include
 
