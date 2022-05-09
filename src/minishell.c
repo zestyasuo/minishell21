@@ -6,7 +6,7 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:39:28 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/09 16:52:37 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/10 01:43:53 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	interrupt(int sig)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
+	if (sig == SIGQUIT)
+		ft_printf("Quit\n");
 }
 
 void	set_shell_attr(void)
@@ -32,18 +34,15 @@ void	set_shell_attr(void)
 	termios_p.c_cc[VINTR] = 3;
 	tcsetattr(0, 0, &termios_p);
 }
-// непонятно какой символ создает сигнал SIGQUIT. в мануале написано 034, но 34 и 034 не ведут себя как следует
-// тестил с другими символами, типа z, работало, но шелл тоже вылетает.
+
 void	unset_shell_atrr(void)
 {
-	struct termios	termios_p;
+	static struct termios	termios_p;
 
-	tcgetattr(0, &termios_p);
-	termios_p.c_cc[VQUIT] = 'z';
-	termios_p.c_cc[VINTR] = 3;
-	termios_p.c_cc[VKILL] = 25;
-	termios_p.c_cc[VSTOP] = 23;
-	tcsetattr(0, 0, &termios_p);
+	if (termios_p.c_cflag == 0)
+		tcgetattr(0, &termios_p);
+	else
+		tcsetattr(0, 0, &termios_p);
 }
 
 void	loop_shell(t_mini *shell, char **envp)
@@ -83,10 +82,12 @@ int	main(int argc, char **argv, char **envp)
 	(void) argv;
 	sa.sa_handler = &interrupt;
 	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
 	if (argc > 1)
 		return (0 * ft_printf(ARGERROR));
 	if (create_shell(&shell, envp))
 		return (1);
+	unset_shell_atrr();
 	set_shell_attr();
 	loop_shell(shell, envp);
 	unset_shell_atrr();
