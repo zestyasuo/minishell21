@@ -1,5 +1,5 @@
 CC			=	clang
-CFLAGS		=	-Wall -Wextra -Werror# -g -fsanitize=address
+CFLAGS		=	-Wall -Wextra -Werror #-g -fsanitize=address
 
 NAME = minishell
 
@@ -19,7 +19,7 @@ SRC			=	minishell.c			\
 				action_utils.c		\
 				change_in_out.c		\
 				here_doc.c			\
-				change_envp.c
+				change_envp.c		\
 				
 FT_PRINTF_PATH	=	./ft_printf/include
 
