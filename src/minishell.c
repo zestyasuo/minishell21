@@ -6,7 +6,7 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:39:28 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/10 21:03:59 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/10 21:06:55 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	loop_shell(t_mini *shell, t_list *envp)
 		return ;
 	while (1)
 	{
-		if (!read_input(&input))//, shell, envp))
+		if (!read_input(&input))
 			continue ;
 		shell->args = get_args(parse_args(input));
 		if (!shell->args)

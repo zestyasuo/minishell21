@@ -6,13 +6,13 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 19:06:03 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/10 20:48:42 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/10 21:18:12 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	read_input(char **input)//, t_mini *shell, t_list *envp)
+int	read_input(char **input)
 {
 	char	*buf;
 	int		input_len;

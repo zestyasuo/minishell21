@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:46:47 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/09 23:53:23 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/10 21:18:37 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ void	print_error(char *error)
 
 void	exec_input(char **input, t_list *envp)
 {
-	int i;
-	
+	int	i;
+
 	i = 0;
 	if (!ft_strcmp("pwd", input[0]))
 		mini_pwd();
@@ -44,15 +44,6 @@ void	exec_input(char **input, t_list *envp)
 	ft_lstclear(&envp, free);
 	exit(i);
 }
-	// else if ("export")
-	// 	export();
-	// else if ("unset")
-	// 	unset();
-
-// int	env_utils(char **envp)
-// {
-// 	if (!ft_strcmp("env"))
-// }
 
 void	exec_child(char **input, char **envp)
 {

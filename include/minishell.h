@@ -6,7 +6,7 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 16:10:08 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/10 20:39:15 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/10 21:06:24 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ t_list		*get_environ(char **envp);
 void		expand_variables(t_mini *shell);
 void		print_variable(void *pointer);
 t_variable	*new_var(char *name, char *value);
-
 
 int			create_shell(t_mini **pointer, char **envp);
 int			read_input(char **input);

@@ -6,7 +6,7 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/10 20:36:59 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/10 21:17:12 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,8 @@ void	action_branch(t_mini *shell, t_list *envp)
 	if (shell->args->next == 0 && !ft_strcmp(arg_list->content, "cd"))
 		mini_cd(get_args_to_exec(shell->args->content), get_args_to_exec(envp));
 	if (!shell->args->next && ft_strchr(arg_list->content, '=')
-		&& !ft_strchr(arg_list->content, '.') && !ft_strchr(arg_list->content, '/') && !arg_list->next)
+		&& !ft_strchr(arg_list->content, '.')
+		&& !ft_strchr(arg_list->content, '/') && !arg_list->next)
 		status = add_new_variable(shell);
 	else if (shell->args->next == 0 && !ft_strcmp(arg_list->content, "export"))
 		status = mini_export(shell, envp);

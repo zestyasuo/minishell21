@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 15:53:12 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/10 01:29:22 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/10 21:09:13 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	remove_var_frst(t_list **lst, char *str)
 {
 	t_list	*elem;
 	t_list	*envp;
-	int	len;
+	int		len;
 
 	envp = *lst;
 	len = ft_strlen(str);
@@ -50,7 +50,8 @@ void	remove_var_frst(t_list **lst, char *str)
 	while (envp->next)
 	{
 		if (!ft_strncmp(envp->next->content, str, len)
-		&& ft_strchr(envp->next->content, '=') - (char *)envp->next->content == len)
+			&& ft_strchr(envp->next->content, '=')
+			- (char *)envp->next->content == len)
 		{
 			elem = envp->next;
 			envp->next = elem->next;
@@ -65,10 +66,10 @@ void	remove_var_frst(t_list **lst, char *str)
 
 void	remove_var_scnd(t_list **env_lst, char *str)
 {
-	t_list	*lst;
-	t_list	*var_lst;
+	t_list		*lst;
+	t_list		*var_lst;
 	t_variable	*var;
-	
+
 	var_lst = *env_lst;
 	if (!ft_strcmp(((t_variable *)(var_lst->content))->name, str))
 	{
