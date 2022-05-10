@@ -6,11 +6,13 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:39:28 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/10 01:43:53 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/10 15:35:05 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+int	g_child;
 
 void	interrupt(int sig)
 {
@@ -19,7 +21,8 @@ void	interrupt(int sig)
 		ft_printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
-		rl_redisplay();
+		if (!g_child)
+			rl_redisplay();
 	}
 	if (sig == SIGQUIT)
 		ft_printf("Quit\n");
@@ -64,10 +67,9 @@ void	loop_shell(t_mini *shell, char **envp)
 		}
 		expand_variables(shell);
 		ft_lstiter(shell->args, remove_quotes);
-		// ft_lstiter(shell->args, print_args);
-		unset_shell_atrr();
+		g_child = 1;
 		action_branch(shell, envp);
-		set_shell_attr();
+		g_child = 0;
 		ft_lstclear(&shell->args, clear_content);
 		free(input);
 		check_returned_value(shell->var_list);
@@ -89,6 +91,7 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	unset_shell_atrr();
 	set_shell_attr();
+	g_child = 0;
 	loop_shell(shell, envp);
 	unset_shell_atrr();
 	return (0);

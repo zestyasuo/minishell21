@@ -6,7 +6,7 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/08 14:35:45 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/10 15:14:23 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ void	action_branch(t_mini *shell, char **envp)
 	int		status;
 	t_list	*arg_list;
 
+	unset_shell_atrr();
 	arg_list = (t_list *)(shell->args->content);
 	fd = create_pipes(shell->args);
 	if (!fd && shell->args->next)
@@ -103,4 +104,5 @@ void	action_branch(t_mini *shell, char **envp)
 		mini_cd(get_args_to_exec(shell->args), envp);
 	status = children_to_exec(shell->args, fd, envp);
 	change_returned_value(shell->var_list, status);
+	set_shell_attr();
 }

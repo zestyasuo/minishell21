@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   action_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/07 00:31:54 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/07 00:42:38 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/10 15:14:53 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	check_returned_value(t_list *env_list)
 	while (env_list && env_list->next)
 		env_list = env_list->next;
 	var = env_list->content;
-	//printf("returned = %s | %s\n", var->name, var->value);///////////////
 	if (!ft_strcmp(var->value, "255"))
 		got_exit_code(var_list);
 	return ;

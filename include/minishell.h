@@ -6,7 +6,7 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 16:10:08 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/08 01:10:00 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/10 15:17:15 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,7 @@ char	**set_delim(t_list *column);
 void	close_fd(int *fd, int size);
 int		ft_isstr(t_list *column, char *str);
 void	remove_quotes(void *content);
+void	unset_shell_atrr(void);
+void	set_shell_attr(void);
 
 #endif
