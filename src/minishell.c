@@ -6,7 +6,7 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:39:28 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/10 15:35:05 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/10 20:43:33 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,15 @@ void	unset_shell_atrr(void)
 		tcsetattr(0, 0, &termios_p);
 }
 
-void	loop_shell(t_mini *shell, char **envp)
+void	loop_shell(t_mini *shell, t_list *envp)
 {
-	char			*input;
+	char	*input;
 
-	(void)envp;
+	if (!envp)
+		return ;
 	while (1)
 	{
-		if (!read_input(&input))
+		if (!read_input(&input))//, shell, envp))
 			continue ;
 		shell->args = get_args(parse_args(input));
 		if (!shell->args)
@@ -72,7 +73,7 @@ void	loop_shell(t_mini *shell, char **envp)
 		g_child = 0;
 		ft_lstclear(&shell->args, clear_content);
 		free(input);
-		check_returned_value(shell->var_list);
+		check_returned_value(shell->var_list, envp);
 	}
 }
 
@@ -92,7 +93,7 @@ int	main(int argc, char **argv, char **envp)
 	unset_shell_atrr();
 	set_shell_attr();
 	g_child = 0;
-	loop_shell(shell, envp);
+	loop_shell(shell, ft_arrdup_to_lst(envp));
 	unset_shell_atrr();
 	return (0);
 }

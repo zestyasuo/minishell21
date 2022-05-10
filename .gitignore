@@ -5,3 +5,4 @@ minishell
 objects
 ft_printf/libftprintf.a
 test
+test.c

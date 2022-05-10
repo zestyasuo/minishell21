@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:46:47 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/05 16:25:24 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/09 23:53:23 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,28 +17,32 @@ void	print_error(char *error)
 	write(2, error, ft_strlen(error));
 }
 
-void	exec_input(char **input, char **envp)
+void	exec_input(char **input, t_list *envp)
 {
+	int i;
+	
+	i = 0;
 	if (!ft_strcmp("pwd", input[0]))
 		mini_pwd();
-	else if (!ft_strcmp("exit", input[0]))
-		shell_exit(255);
 	else if (!ft_strcmp("clear", input[0]))
 		mini_clear();
 	else if (!ft_strcmp("cd", input[0]))
-		mini_cd(input, 0);
+		i = mini_cd(input, 0);
 	else if (!ft_strcmp("echo", input[0]))
 		mini_echo(input);
 	else if (!ft_strcmp("env", input[0]))
 		mini_env(envp);
+	else if (!ft_strcmp("exit", input[0]) || !ft_strcmp("export", input[0])
+		|| !ft_strcmp("unset", input[0]))
+		i = 1;
 	else
 	{
 		print_error("Such words are beyond my comprehension\n");
 		return ;
 	}
-	if (input)
-		free(input);
-	exit(0);
+	free_arr(input);
+	ft_lstclear(&envp, free);
+	exit(i);
 }
 	// else if ("export")
 	// 	export();

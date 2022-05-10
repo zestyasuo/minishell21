@@ -6,7 +6,7 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/10 15:14:23 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/10 20:36:59 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,22 @@ char	**replace_fd(t_list *column, int *fd, int i)
 		|| ft_isstr(column, ">>") || ft_isstr(column, "<<"))
 		arr = change_in_out_delim(column);
 	else
-		arr = get_args_to_exec(column);
+		arr = get_args_to_exec(column->content);
 	return (arr);
 }
 
-void	run_bins(char **arr, char **envp, int *fd, int size)
+void	run_bins(char **arr, t_list *envp, int *fd, int size)
 {
+	char	**arr_envp;
+
+	arr_envp = get_args_to_exec(envp);
 	if (arr && arr[0] && (ft_strncmp(arr[0], "./", 2)
 			&& ft_strncmp(arr[0], "/bin/", 5)))
 		exec_input(arr, envp);
-	else if (arr && arr[0] && execve(arr[0], &arr[0], envp))
+	else if (arr && arr[0] && execve(arr[0], &arr[0], arr_envp))
 		perror(arr[0]);
-	if (arr)
-		free(arr);
+	free_arr(arr);
+	free_arr(arr_envp);
 	close_fd(fd, size);
 	exit(127);
 }
@@ -62,7 +65,7 @@ int	*create_pipes(t_list *columns)
 	return (fd);
 }
 
-int	children_to_exec(t_list *columns, int *fd, char **envp)
+int	children_to_exec(t_list *columns, int *fd, t_list *envp)
 {
 	int	i;
 	int	size;
@@ -89,7 +92,7 @@ int	children_to_exec(t_list *columns, int *fd, char **envp)
 	return (WEXITSTATUS(pid));
 }
 
-void	action_branch(t_mini *shell, char **envp)
+void	action_branch(t_mini *shell, t_list *envp)
 {
 	int		*fd;
 	int		status;
@@ -101,8 +104,17 @@ void	action_branch(t_mini *shell, char **envp)
 	if (!fd && shell->args->next)
 		return ;
 	if (shell->args->next == 0 && !ft_strcmp(arg_list->content, "cd"))
-		mini_cd(get_args_to_exec(shell->args), envp);
-	status = children_to_exec(shell->args, fd, envp);
-	change_returned_value(shell->var_list, status);
-	set_shell_attr();
+		mini_cd(get_args_to_exec(shell->args->content), get_args_to_exec(envp));
+	if (!shell->args->next && ft_strchr(arg_list->content, '=')
+		&& !ft_strchr(arg_list->content, '.') && !ft_strchr(arg_list->content, '/') && !arg_list->next)
+		status = add_new_variable(shell);
+	else if (shell->args->next == 0 && !ft_strcmp(arg_list->content, "export"))
+		status = mini_export(shell, envp);
+	else if (shell->args->next == 0 && !ft_strcmp(arg_list->content, "unset"))
+		status = mini_unset(shell, envp);
+	else if (shell->args->next == 0 && !ft_strcmp(arg_list->content, "exit"))
+		status = shell_exit(shell, envp);
+	else
+		status = children_to_exec(shell->args, fd, envp);
+	change_var_value(shell->var_list, "?", ft_itoa(status));
 }

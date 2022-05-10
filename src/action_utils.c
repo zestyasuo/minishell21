@@ -6,18 +6,19 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/07 00:31:54 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/10 15:14:53 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/10 20:36:49 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	got_exit_code(t_list *var_list)
+void	got_exit_code(t_list *var_list, t_list *envp)
 {
 	t_list		*lst;
 	t_variable	*var;
 
 	lst = var_list;
+	ft_lstclear(&envp, free);
 	while (lst)
 	{
 		var = lst->content;
@@ -31,7 +32,7 @@ void	got_exit_code(t_list *var_list)
 	exit(0);
 }
 
-void	check_returned_value(t_list *env_list)
+void	check_returned_value(t_list *env_list, t_list *envp)
 {
 	t_list		*var_list;
 	t_variable	*var;
@@ -41,20 +42,27 @@ void	check_returned_value(t_list *env_list)
 		env_list = env_list->next;
 	var = env_list->content;
 	if (!ft_strcmp(var->value, "255"))
-		got_exit_code(var_list);
+		got_exit_code(var_list, envp);
 	return ;
 }
 
-void	change_returned_value(t_list *env_list, unsigned char num)
+void	change_var_value(t_list *env_list, char *name, char *value)
 {
 	t_variable	*var;
+	t_list		*lst;
 
-	while (env_list && env_list->next)
-		env_list = env_list->next;
-	var = env_list->content;
+	lst = env_list;
+	while (lst)
+	{
+		var = lst->content;
+		if (!ft_strcmp(var->name, name))
+			break ;
+		lst = lst->next;
+	}
 	if (var->value)
 		free(var->value);
-	var->value = ft_itoa(num);
+	var->value = value;
+	return ;
 }
 
 void	close_fd(int *fd, int size)
