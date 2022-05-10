@@ -6,20 +6,18 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/07 00:27:19 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/07 00:30:45 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/08 12:17:48 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char	**get_args_to_exec(t_list *column)
+char	**get_args_to_exec(t_list *lst)
 {
 	int		i;
-	t_list	*lst;
 	char	**args;
 
 	i = 0;
-	lst = column->content;
 	args = malloc(sizeof(*args) * (ft_lstsize(lst) + 1));
 	if (!args)
 		return (0);
@@ -68,7 +66,7 @@ char	**change_in(t_list *column)
 	dup2(fd, STDIN_FILENO);
 	close(fd);
 	remove_elements(column, lst_1);
-	return (get_args_to_exec(column));
+	return (get_args_to_exec(column->content));
 }
 
 char	**change_out(t_list *column)
@@ -93,7 +91,7 @@ char	**change_out(t_list *column)
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
 	remove_elements(column, lst_1);
-	return (get_args_to_exec(column));
+	return (get_args_to_exec(column->content));
 }
 
 char	**change_in_out_delim(t_list *column)

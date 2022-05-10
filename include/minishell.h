@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 16:10:08 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/08 01:10:00 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/10 13:30:09 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,12 @@ typedef struct s_mini {
 
 void	mini_clear(void);
 void	mini_pwd(void);
-void	mini_cd(char **path, char **envp);
+int		mini_cd(char **path, char **envp);
 void	mini_echo(char **args);
-void	shell_exit(int code);
-void	mini_env(char **envp);
+int		shell_exit(t_mini *shell, t_list *envp);
+void	mini_env(t_list *envp);
+int		mini_unset(t_mini *shell, t_list *envp);
+int		mini_export(t_mini *shell, t_list *envp);
 
 t_list	*parse_args(char *input);
 t_list	*get_args(t_list *input);
@@ -52,10 +54,12 @@ void	destroy_var(void *p);
 t_list	*get_environ(char **envp);
 void	expand_variables(t_mini *shell);
 void	print_variable(void *pointer);
+t_variable	*new_var(char *name, char *value);
+
 
 int		create_shell(t_mini **pointer, char **envp);
 int		read_input(char **input);
-void	exec_input(char **input, char **envp);
+void	exec_input(char **input, t_list *envp);
 void	print_error(char *error);
 void	exec_child(char **input, char **envp);
 void	print_content(void *content);
@@ -68,15 +72,19 @@ void	print_args(void *args);
 void	clear_content(void *lst);
 t_list	*get_variable_by_name(t_list *var_list, char *name);
 
-void	action_branch(t_mini *shell, char **envp);
-void	change_returned_value(t_list *env_list, unsigned char num);
-void	check_returned_value(t_list *env_list);
+void	action_branch(t_mini *shell, t_list *envp);
+void	change_var_value(t_list *env_list, char *name, char *value);
+void	check_returned_value(t_list *env_list, t_list *envp);
 char	**change_in_out_delim(t_list *column);
-char	**get_args_to_exec(t_list *column);
-void	remove_elements(t_list *column, t_list	*lst_1);
+char	**get_args_to_exec(t_list *lst);
+void	remove_elements(t_list *column, t_list *lst_1);
 char	**set_delim(t_list *column);
 void	close_fd(int *fd, int size);
 int		ft_isstr(t_list *column, char *str);
 void	remove_quotes(void *content);
+
+t_list	*ft_arrdup_to_lst(char **arr_1);
+void    free_arr(char **arr);
+int		add_new_variable(t_mini *shell);
 
 #endif

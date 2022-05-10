@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:39:28 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/10 01:43:53 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/10 13:27:46 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,15 @@ void	unset_shell_atrr(void)
 		tcsetattr(0, 0, &termios_p);
 }
 
-void	loop_shell(t_mini *shell, char **envp)
+void	loop_shell(t_mini *shell, t_list *envp)
 {
-	char			*input;
-
-	(void)envp;
+	char	*input;
+	
+	if (!envp)
+		return ;
 	while (1)
 	{
-		if (!read_input(&input))
+		if (!read_input(&input))//, shell, envp))
 			continue ;
 		shell->args = get_args(parse_args(input));
 		if (!shell->args)
@@ -64,13 +65,15 @@ void	loop_shell(t_mini *shell, char **envp)
 		}
 		expand_variables(shell);
 		ft_lstiter(shell->args, remove_quotes);
-		// ft_lstiter(shell->args, print_args);
+		//print_args(shell->args->content);
+		//ft_lstiter(shell->args, print_args);
+		//second_parser(shell);
 		unset_shell_atrr();
 		action_branch(shell, envp);
 		set_shell_attr();
 		ft_lstclear(&shell->args, clear_content);
 		free(input);
-		check_returned_value(shell->var_list);
+		check_returned_value(shell->var_list, envp);
 	}
 }
 
@@ -89,7 +92,7 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	unset_shell_atrr();
 	set_shell_attr();
-	loop_shell(shell, envp);
+	loop_shell(shell, ft_arrdup_to_lst(envp));
 	unset_shell_atrr();
 	return (0);
 }

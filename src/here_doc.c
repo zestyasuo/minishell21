@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/07 00:25:00 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/07 00:26:45 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/08 12:16:28 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,5 @@ char	**set_delim(t_list *column)
 	}
 	dup2(fd, STDIN_FILENO);
 	close(fd);
-	return (get_args_to_exec(column));
+	return (get_args_to_exec(column->content));
 }
