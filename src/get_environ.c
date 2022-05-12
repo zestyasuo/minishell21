@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_environ.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 23:36:44 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/11 17:35:44 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/12 22:27:07 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	destroy_var(void *p)
 	var = (t_variable *)p;
 	free(var->name);
 	free(var->value);
+	free(var);
 }
 
 void	print_variable(void *pointer)
