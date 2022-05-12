@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/07 00:27:19 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/08 12:17:48 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/12 14:12:45 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,19 +99,19 @@ char	**change_in_out_delim(t_list *column)
 	char	**arr;
 
 	arr = 0;
-	if (ft_isstr(column, "<<"))
+	if (look_var(column->content, "<<"))
 	{
 		arr = set_delim(column);
 		if (!arr)
 			return (0);
 	}
-	else if (ft_isstr(column, "<"))
+	else if (look_var(column->content, "<"))
 	{
 		arr = change_in(column);
 		if (!arr)
 			return (0);
 	}
-	if (ft_isstr(column, ">") || ft_isstr(column, ">>"))
+	if (look_var(column->content, ">") || look_var(column->content, ">>"))
 	{
 		if (arr)
 			free(arr);

@@ -6,7 +6,9 @@ NAME = minishell
 SRC			=	minishell.c			\
 				minishell_utils.c	\
 				built_in_1.c		\
-				built_in_2.c		\
+				mini_export.c		\
+				mini_unset.c		\
+				shell_exit.c		\
 				next_line.c			\
 				create_shell.c		\
 				parse_args.c		\

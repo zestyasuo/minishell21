@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_environ.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 23:36:44 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/04/22 23:42:37 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/11 17:35:44 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,6 @@ t_list	*get_environ(char **envp)
 		i++;
 	}
 	ft_lstadd_back(&environ,
-		ft_lstnew(new_var(ft_strdup("?"), ft_strdup("0"))));/////////////////////////////////
+		ft_lstnew(new_var(ft_strdup("?"), ft_strdup("0"))));
 	return (environ);
 }

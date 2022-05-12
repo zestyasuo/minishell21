@@ -6,11 +6,22 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 22:50:05 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/09 13:00:26 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/12 15:29:00 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+int	mini_env(t_list *envp, char *str)
+{
+	while (envp)
+	{
+		if (str && ((ft_strchr(envp->content, '=') && !str[0]) || str[0]))
+			ft_printf("%s%s\n", str, envp->content);
+		envp = envp->next;
+	}
+	return (0);
+}
 
 void	mini_pwd(void)
 {
@@ -20,20 +31,26 @@ void	mini_pwd(void)
 	ft_printf("%s\n", buf);
 }
 
-int	mini_cd(char **path, char **envp)
+int	mini_cd(t_list *args, t_list *envp)
 {
-	int	i;
+	int		i;
+	int		code;
+	char	*home_dir;
 
-	i = 0;
-	while (path[i])
-		i++;
-	if (i > 2 && envp)
-		print_error("Too many arguments\n");
-	else if (!chdir(path[1]))
-		return (0);
-	if (envp)
+	code = 1;
+	home_dir = look_var(envp, "HOME");
+	i = ft_lstsize(args);
+	if (i == 1 && home_dir)
+		home_dir = ft_strchr(home_dir, '=') + 1;
+	if (i > 2)
+		print_error("cd : too many arguments\n");
+	else if (i == 2 && chdir(args->next->content))
 		perror("cd ");
-	return (1);
+	else if (i == 1 && chdir(home_dir))
+		ft_putstr_fd("mshell : cd : HOME not set\n", 2);
+	else
+		code = 0;
+	return (code);
 }
 
 void	mini_echo(char **args)
@@ -55,35 +72,6 @@ void	mini_echo(char **args)
 	ft_printf("%s", args[i]);
 	if (!endl)
 		write(1, "\n", 1);
-}
-
-int	shell_exit(t_mini *shell, t_list *envp)
-{
-	int		i;
-	int		code;
-	char	*str;
-
-	i = 0;
-	code = 1;
-	str = 0;
-	if (((t_list *)(shell->args->content))->next)
-		str = ((t_list *)(shell->args->content))->next->content;
-	while (str && str[i] && code == 1)
-	{
-		if (!ft_isdigit(str[i]))
-			code = 2;
-		i++;
-	}
-	if (ft_lstsize(shell->args->content) > 2 && code == 1)
-		return (0 * printf("mshell: exit: too many arguments\n") + 1);
-	if (code == 1 && str)
-		code = ft_atoi(str);
-	ft_lstclear(&shell->var_list, destroy_var);
-	ft_lstclear(&shell->args, clear_content);
-	ft_lstclear(&envp, free);
-	free(shell);
-	write(1, "exit\n", 5);
-	exit(code);
 }
 
 void	mini_clear(void)

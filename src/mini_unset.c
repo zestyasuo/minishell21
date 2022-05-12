@@ -1,46 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_in_2.c                                       :+:      :+:    :+:   */
+/*   mini_unset.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/11 15:53:12 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/10 01:29:22 by mnathali         ###   ########.fr       */
+/*   Created: 2022/05/12 14:34:36 by mnathali          #+#    #+#             */
+/*   Updated: 2022/05/12 15:25:05 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	mini_env(t_list *envp)
-{
-	while (envp)
-	{
-		ft_printf("%s\n", envp->content);
-		envp = envp->next;
-	}
-}
-
-int	mini_export(t_mini *shell, t_list *envp)
-{
-	int	i;
-
-	(void)shell;
-	(void)envp;
-	i = 0;
-	return (i);
-}
-
 void	remove_var_frst(t_list **lst, char *str)
 {
 	t_list	*elem;
 	t_list	*envp;
-	int	len;
 
 	envp = *lst;
-	len = ft_strlen(str);
-	if (!ft_strncmp(envp->content, str, len)
-		&& ft_strchr(envp->content, '=') - (char *)envp->content == len)
+	if (!ft_strcmp(envp->content, str) || ft_strcmp(envp->content, str) == 61)
 	{
 		*lst = envp->next;
 		free(envp->content);
@@ -49,8 +27,8 @@ void	remove_var_frst(t_list **lst, char *str)
 	}
 	while (envp->next)
 	{
-		if (!ft_strncmp(envp->next->content, str, len)
-		&& ft_strchr(envp->next->content, '=') - (char *)envp->next->content == len)
+		if (!ft_strcmp(envp->next->content, str)
+			|| ft_strcmp(envp->next->content, str) == 61)
 		{
 			elem = envp->next;
 			envp->next = elem->next;
@@ -65,10 +43,10 @@ void	remove_var_frst(t_list **lst, char *str)
 
 void	remove_var_scnd(t_list **env_lst, char *str)
 {
-	t_list	*lst;
-	t_list	*var_lst;
+	t_list		*lst;
+	t_list		*var_lst;
 	t_variable	*var;
-	
+
 	var_lst = *env_lst;
 	if (!ft_strcmp(((t_variable *)(var_lst->content))->name, str))
 	{
@@ -98,10 +76,10 @@ int	mini_unset(t_mini *shell, t_list *envp)
 
 	lst = shell->args->content;
 	lst = lst->next;
-	if (!ft_strcmp("?", lst->content))
-		return (0 * ft_putstr_fd("mshell: unset: '?' not valid\n", 2) + 1);
 	while (lst)
 	{
+		if (!ft_strcmp("?", lst->content))
+			return (0 * ft_putstr_fd("mshell: unset: '?' not valid\n", 2) + 1);
 		remove_var_frst(&envp, lst->content);
 		remove_var_scnd(&shell->var_list, lst->content);
 		lst = lst->next;

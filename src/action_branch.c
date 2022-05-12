@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/09 16:16:25 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/12 14:18:32 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ char	**replace_fd(t_list *column, int *fd, int i)
 		dup2(fd[2 * i + 1], STDOUT_FILENO);
 	if (i)
 		dup2(fd[2 * i - 2], STDIN_FILENO);
-	if (ft_isstr(column, "<") || ft_isstr(column, ">")
-		|| ft_isstr(column, ">>") || ft_isstr(column, "<<"))
+	if (look_var(column->content, "<") || look_var(column->content, ">")
+		|| look_var(column->content, ">>") || look_var(column->content, "<<"))
 		arr = change_in_out_delim(column);
 	else
 		arr = get_args_to_exec(column->content);
@@ -33,9 +33,12 @@ void	run_bins(char **arr, t_list *envp, int *fd, int size)
 	char	**arr_envp;
 
 	arr_envp = get_args_to_exec(envp);
-	if (arr && arr[0] && (ft_strncmp(arr[0], "./", 2)
-			&& ft_strncmp(arr[0], "/bin/", 5)))
-		exec_input(arr, envp);
+	exec_input(arr, envp);
+	find_bin_in_path(arr, envp);
+	if (arr && arr[0] && ((ft_strncmp(arr[0], "./", 2)
+				&& ft_strncmp(arr[0], "../", 3) && arr[0][0] != '/')
+		&& ft_strrchr(arr[0], '.')))
+		ft_putstr_fd("mshell: command not found\n", 2);
 	else if (arr && arr[0] && execve(arr[0], &arr[0], arr_envp))
 		perror(arr[0]);
 	free_arr(arr);
@@ -99,14 +102,13 @@ void	action_branch(t_mini *shell, t_list *envp)
 	t_list	*arg_list;
 
 	arg_list = (t_list *)(shell->args->content);
+	if (!arg_list)
+		return ;
 	fd = create_pipes(shell->args);
 	if (!fd && shell->args->next)
 		return ;
 	if (shell->args->next == 0 && !ft_strcmp(arg_list->content, "cd"))
-		mini_cd(get_args_to_exec(shell->args->content), get_args_to_exec(envp));
-	if (!shell->args->next && ft_strchr(arg_list->content, '=')
-		&& !ft_strchr(arg_list->content, '.') && !ft_strchr(arg_list->content, '/') && !arg_list->next)
-		status = add_new_variable(shell);
+		status = mini_cd(shell->args->content, envp);
 	else if (shell->args->next == 0 && !ft_strcmp(arg_list->content, "export"))
 		status = mini_export(shell, envp);
 	else if (shell->args->next == 0 && !ft_strcmp(arg_list->content, "unset"))
