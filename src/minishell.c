@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:39:28 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/12 14:27:12 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/12 21:50:50 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,26 +26,6 @@ void	interrupt(int sig)
 	}
 	if (sig == SIGQUIT)
 		ft_printf("Quit\n");
-}
-
-void	set_shell_attr(void)
-{
-	struct termios		termios_p;
-
-	tcgetattr(0, &termios_p);
-	termios_p.c_cc[VQUIT] = 0;
-	termios_p.c_cc[VINTR] = 3;
-	tcsetattr(0, 0, &termios_p);
-}
-
-void	unset_shell_atrr(void)
-{
-	static struct termios	termios_p;
-
-	if (termios_p.c_cflag == 0)
-		tcgetattr(0, &termios_p);
-	else
-		tcsetattr(0, 0, &termios_p);
 }
 
 void	loop_shell(t_mini *shell, t_list *envp)

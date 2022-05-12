@@ -3,14 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   shell_exit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/12 15:28:02 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/12 15:29:12 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/12 22:04:21 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+void	clear_shell(t_mini *shell)
+{
+	ft_lstclear(&shell->var_list, destroy_var);
+	ft_lstclear(&shell->args, clear_content);
+}
 
 int	shell_exit(t_mini *shell, t_list *envp)
 {
@@ -33,10 +39,10 @@ int	shell_exit(t_mini *shell, t_list *envp)
 		return (0 * printf("mshell: exit: too many arguments\n") + 1);
 	if (code == 1 && str)
 		code = ft_atoi(str);
-	ft_lstclear(&shell->var_list, destroy_var);
-	ft_lstclear(&shell->args, clear_content);
+	clear_shell(shell);
 	ft_lstclear(&envp, free);
 	free(shell);
 	write(1, "exit\n", 5);
+	unset_shell_atrr();
 	exit(code);
 }

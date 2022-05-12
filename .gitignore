@@ -4,4 +4,4 @@ minishell
 *.o
 objects
 ft_printf/libftprintf.a
-test
+test*

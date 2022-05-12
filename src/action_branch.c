@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   action_branch.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/12 14:18:32 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/12 22:03:18 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ void	action_branch(t_mini *shell, t_list *envp)
 	int		status;
 	t_list	*arg_list;
 
+	unset_shell_atrr();
 	arg_list = (t_list *)(shell->args->content);
 	if (!arg_list)
 		return ;
@@ -118,4 +119,5 @@ void	action_branch(t_mini *shell, t_list *envp)
 	else
 		status = children_to_exec(shell->args, fd, envp);
 	change_var_value(shell->var_list, "?", ft_itoa(status));
+	set_shell_attr();
 }
