@@ -6,7 +6,7 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/12 22:03:18 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/13 19:39:13 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ void	action_branch(t_mini *shell, t_list *envp)
 	unset_shell_atrr();
 	arg_list = (t_list *)(shell->args->content);
 	if (!arg_list)
+		return ;
+	if (!ft_strlen(arg_list->content))
 		return ;
 	fd = create_pipes(shell->args);
 	if (!fd && shell->args->next)
