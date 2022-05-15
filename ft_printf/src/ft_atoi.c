@@ -12,14 +12,6 @@
 
 #include"../include/libft.h"
 
-static int	isspace(int c)
-{
-	if (c == ' ' || c == '\t' || c == '\n' || c == '\v'
-		|| c == '\f' || c == '\r')
-		return (1);
-	return (0);
-}
-
 static int	out_of_bounds(char c, int sign)
 {
 	if (c == '8' && sign == 1)
@@ -42,7 +34,7 @@ int	ft_atoi(const char *str)
 	result = 0;
 	i = 0;
 	sign = 1;
-	while (isspace(str[i]))
+	while (ft_isspace(str[i]))
 		i++;
 	if (str[i] == '-' || str[i] == '+')
 		sign = 1 - 2 * (str[i++] == '-');

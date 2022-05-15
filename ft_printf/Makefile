@@ -52,6 +52,7 @@ SRC	=			ft_putnbr_base.c	\
 				ft_printf.c			\
 				ft_array_size.c		\
 				ft_lst_getbyid.c	\
+				ft_isspace.c
 
 OBJ_PATH	=	objects
 SRC_PATH	=	src
@@ -64,7 +65,6 @@ HEADERS	=		ft_printf.h				\
 				libft.h				
 
 HEAD_DEP	=	${HEADERS:%.h=${INC_PATH}/%.h}
-
 
 .PHONY : all clean fclean re
 

@@ -6,7 +6,7 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 18:23:32 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/08 00:49:06 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/15 11:42:00 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*get_space_str(char *str)
 	char	*res;
 
 	i = 0;
-	while (str[i] && !isspace(str[i]) && str[i] != '\'' && str[i] != '\"'
+	while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' && str[i] != '\"'
 		&& str[i] != '|' && str[i] != '>' && str[i] != '<')
 		i++;
 	res = ft_substr(str, 0, i);
@@ -87,7 +87,7 @@ t_list	*parse_args(char *input)
 	args = 0;
 	while (input[i])
 	{
-		while (isspace(input[i]) && input[i])
+		while (ft_isspace(input[i]) && input[i])
 			i++;
 		arg_len = add_arg(&args, get_new_arg(input + i));
 		if (!arg_len)

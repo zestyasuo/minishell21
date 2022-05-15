@@ -57,7 +57,7 @@ ${OBJ_PATH}/%.o : ${SRC_PATH}/%.c ${HEAD_DEP} | ${OBJ_PATH}
 	${CC} ${CFLAGS} -o $@ -c $< -I${INC_PATH} -I${FT_PRINTF_PATH}
 
 ${NAME} : ${OBJ}
-	${CC} ${CFLAGS} -o $@  $^ ${FT_PRINTF} -lreadline
+	${CC} ${CFLAGS} -o $@  $^ ${FT_PRINTF} -lreadline -L/Users/zyasuo/.brew/Cellar/readline/8.1.2/lib/ -I/Users/zyasuo/.brew/Cellar/readline/8.1.2/include/
 	@echo "✅ Your ${NAME} is ready to fly."
 
 clean :

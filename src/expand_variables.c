@@ -6,7 +6,7 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 23:04:10 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/07 20:16:33 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/15 10:50:51 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*get_next_var_name(char *string)
 		{
 			i++;
 			j = i;
-			while (str[j] && !isspace(str[j]) && str[j] != '\"')
+			while (str[j] && !ft_isspace(str[j]) && str[j] != '\"')
 				j++;
 			if (!(j - i))
 				return (NULL);

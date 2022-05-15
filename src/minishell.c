@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:39:28 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/12 14:27:12 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/15 11:56:28 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	interrupt(int sig)
 	{
 		ft_printf("\n");
 		rl_on_new_line();
-		rl_replace_line("", 0);
+		// rl_replace_line("", 0);
 		if (!g_child)
 			rl_redisplay();
 	}
@@ -71,6 +71,7 @@ void	loop_shell(t_mini *shell, t_list *envp)
 		ft_lstiter(shell->args, remove_quotes);
 		g_child = 1;
 		action_branch(shell, envp);
+		// ft_lstiter(shell->args, print_args);
 		g_child = 0;
 		ft_lstclear(&shell->args, clear_content);
 		free(input);
