@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:46:47 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/12 22:09:16 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/12 14:14:54 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,31 +40,4 @@ void	exec_input(char **input, t_list *envp)
 	free_arr(input);
 	ft_lstclear(&envp, free);
 	exit(i);
-}
-
-void	set_shell_attr(void)
-{
-	struct termios		termios_p;
-
-	tcgetattr(0, &termios_p);
-	termios_p.c_cc[VQUIT] = 0;
-	termios_p.c_cc[VINTR] = 3;
-	if (tcsetattr(0, TCSANOW, &termios_p) == -1)
-		perror("set attr");
-}
-
-void	unset_shell_atrr(void)
-{
-	static struct termios	termios_p;
-
-	if (termios_p.c_cflag == 0)
-	{
-		if (tcgetattr(0, &termios_p) == -1)
-			perror("tcgetattr");
-	}
-	else
-	{
-		if (tcsetattr(0, TCSANOW, &termios_p) == -1)
-			perror("tcunsetattr");
-	}
 }

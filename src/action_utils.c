@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/07 00:31:54 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/12 14:28:10 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/15 03:49:28 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	find_bin_in_path(char **arr, t_list *envp)
 	char	*str;
 
 	i = 0;
-	if (!arr || !arr[0] || (arr && arr[0] && !ft_isalpha(arr[0][0])))
+	if (!arr || !arr[0])
 		return ;
 	path = ft_split(ft_strchr(look_var(envp, "PATH"), '=') + 1, ':');
 	while (path && path[i])

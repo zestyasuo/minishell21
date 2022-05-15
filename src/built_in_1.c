@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 22:50:05 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/12 15:29:00 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/14 01:11:45 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,28 +29,6 @@ void	mini_pwd(void)
 
 	getcwd(buf, sizeof(buf));
 	ft_printf("%s\n", buf);
-}
-
-int	mini_cd(t_list *args, t_list *envp)
-{
-	int		i;
-	int		code;
-	char	*home_dir;
-
-	code = 1;
-	home_dir = look_var(envp, "HOME");
-	i = ft_lstsize(args);
-	if (i == 1 && home_dir)
-		home_dir = ft_strchr(home_dir, '=') + 1;
-	if (i > 2)
-		print_error("cd : too many arguments\n");
-	else if (i == 2 && chdir(args->next->content))
-		perror("cd ");
-	else if (i == 1 && chdir(home_dir))
-		ft_putstr_fd("mshell : cd : HOME not set\n", 2);
-	else
-		code = 0;
-	return (code);
 }
 
 void	mini_echo(char **args)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   action_branch.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/13 19:39:13 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/14 01:05:59 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,21 @@ char	**replace_fd(t_list *column, int *fd, int i)
 {
 	char	**arr;
 
+	arr = 0;
 	if (column->next)
 		dup2(fd[2 * i + 1], STDOUT_FILENO);
 	if (i)
 		dup2(fd[2 * i - 2], STDIN_FILENO);
-	if (look_var(column->content, "<") || look_var(column->content, ">")
+	while (look_var(column->content, "<") || look_var(column->content, ">")
 		|| look_var(column->content, ">>") || look_var(column->content, "<<"))
+	{
+		if (arr)
+			free(arr);
 		arr = change_in_out_delim(column);
-	else
+		if (!arr)
+			return (0);
+	}
+	if (!arr)
 		arr = get_args_to_exec(column->content);
 	return (arr);
 }
@@ -37,7 +44,7 @@ void	run_bins(char **arr, t_list *envp, int *fd, int size)
 	find_bin_in_path(arr, envp);
 	if (arr && arr[0] && ((ft_strncmp(arr[0], "./", 2)
 				&& ft_strncmp(arr[0], "../", 3) && arr[0][0] != '/')
-		&& ft_strrchr(arr[0], '.')))
+		&& (ft_strrchr(arr[0], '.') || access(arr[0], F_OK))))
 		ft_putstr_fd("mshell: command not found\n", 2);
 	else if (arr && arr[0] && execve(arr[0], &arr[0], arr_envp))
 		perror(arr[0]);
@@ -101,17 +108,15 @@ void	action_branch(t_mini *shell, t_list *envp)
 	int		status;
 	t_list	*arg_list;
 
-	unset_shell_atrr();
 	arg_list = (t_list *)(shell->args->content);
-	if (!arg_list)
+	if (!arg_list || !ft_strlen(arg_list->content))
 		return ;
-	if (!ft_strlen(arg_list->content))
-		return ;
+	unset_shell_atrr();
 	fd = create_pipes(shell->args);
 	if (!fd && shell->args->next)
 		return ;
 	if (shell->args->next == 0 && !ft_strcmp(arg_list->content, "cd"))
-		status = mini_cd(shell->args->content, envp);
+		status = mini_cd(shell, envp);
 	else if (shell->args->next == 0 && !ft_strcmp(arg_list->content, "export"))
 		status = mini_export(shell, envp);
 	else if (shell->args->next == 0 && !ft_strcmp(arg_list->content, "unset"))
