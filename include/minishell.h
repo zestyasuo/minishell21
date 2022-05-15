@@ -6,7 +6,7 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 16:10:08 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/15 11:19:54 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/15 13:39:46 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ char		*ft_double_join(char *s1, char *s2, char *s3);
 
 void		unset_shell_atrr(void);
 void		set_shell_attr(void);
+void		rl_replace_line (const char *text, int clear_undo);
 void	print_content(void *content);
 void	print_args(void *args);
 #endif

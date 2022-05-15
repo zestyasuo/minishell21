@@ -6,7 +6,7 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 23:04:10 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/15 10:50:51 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/15 13:35:35 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,26 +45,24 @@ char	*insert_value(char *src, int part1, int part2, char *insert)
 	char	*strpart1;
 	char	*strpart2;
 	int		insertlen;
-	int		srclen;
 	char	*newstring;
 
-	srclen = ft_strlen(src);
 	strpart1 = ft_substr(src, 0, part1);
 	strpart2 = ft_substr(src, part2, ft_strlen(src));
 	insertlen = ft_strlen(insert);
-	newstring = malloc(insertlen + srclen + 1);
+	newstring = malloc(insertlen + ft_strlen(src) + 1);
 	if (!newstring)
 		return (NULL);
 	ft_memcpy(newstring, strpart1, part1);
 	ft_memcpy(&newstring[part1], insert, insertlen);
 	ft_memcpy(&newstring[part1 + insertlen], strpart2, ft_strlen(strpart2));
-	newstring[srclen + insertlen - (part2 - part1)] = '\0';
+	newstring[ft_strlen(src) + insertlen - (part2 - part1)] = '\0';
 	free(strpart1);
 	free(strpart2);
 	return (newstring);
 }
 
-void	insert_variable(t_list *arg, t_list *var)
+void	insert_variable(t_list *arg, t_variable *var)
 {
 	static int			i;
 	static char			*str;
@@ -81,9 +79,8 @@ void	insert_variable(t_list *arg, t_list *var)
 	{
 		if (str[i] == '$')
 		{
-			j = i + ft_strlen(((t_variable *)var->content)->name) + 1;
-			arg->content = insert_value(str, i, j,
-					((t_variable *)var->content)->value);
+			j = i + ft_strlen(var->name) + 1;
+			arg->content = insert_value(str, i, j, var->value);
 			free(str);
 			str = arg->content;
 			i = j;
@@ -118,8 +115,9 @@ void	insert_variable(t_list *arg, t_list *var)
 
 void	expand_variable(t_list *arg, t_list *var_list)
 {
-	char	*var_name;
-	t_list	*current_var;
+	char		*var_name;
+	t_list		*current_var;
+	t_variable	*tmp;
 
 	var_name = get_next_var_name(arg->content);
 	if (!var_name)
@@ -128,7 +126,13 @@ void	expand_variable(t_list *arg, t_list *var_list)
 	{
 		current_var = get_variable_by_name(var_list, var_name);
 		if (current_var)
-			insert_variable(arg, current_var);
+			insert_variable(arg, current_var->content);
+		else
+		{
+			tmp = new_var(var_name, NULL);
+			insert_variable(arg, tmp);
+			free(tmp);
+		}
 		free(var_name);
 		var_name = get_next_var_name(arg->content);
 	}
