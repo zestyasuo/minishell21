@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   action_branch.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/14 01:05:59 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/15 19:46:01 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,16 @@ void	run_bins(char **arr, t_list *envp, int *fd, int size)
 
 	arr_envp = get_args_to_exec(envp);
 	exec_input(arr, envp);
-	find_bin_in_path(arr, envp);
-	if (arr && arr[0] && ((ft_strncmp(arr[0], "./", 2)
-				&& ft_strncmp(arr[0], "../", 3) && arr[0][0] != '/')
-		&& (ft_strrchr(arr[0], '.') || access(arr[0], F_OK))))
-		ft_putstr_fd("mshell: command not found\n", 2);
-	else if (arr && arr[0] && execve(arr[0], &arr[0], arr_envp))
+	if (arr[0][0] != '.' && arr[0][0] != '/')
+	{
+		find_bin_in_path(arr, envp);
+		if (execve(arr[0], arr, arr_envp))
+		{
+			print_error(arr[0]);
+			print_error(" : command not found\n");
+		}
+	}
+	else if (arr && arr[0] && execve(arr[0], arr, arr_envp))
 		perror(arr[0]);
 	free_arr(arr);
 	free_arr(arr_envp);
@@ -92,7 +96,7 @@ int	children_to_exec(t_list *columns, int *fd, t_list *envp)
 			run_bins(replace_fd(columns, fd, i), envp, fd, size);
 		columns = columns->next;
 		i++;
-		waitpid(0, &pid, 0);
+		wait(&pid);
 		if (WEXITSTATUS(pid) == 127)
 			break ;
 	}

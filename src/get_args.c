@@ -6,7 +6,7 @@
 /*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 22:43:12 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/08 00:47:04 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/15 18:58:52 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,8 @@ int	is_arg_valid(t_list *arg)
 int	is_program_vaild(t_list *program)
 {
 	t_list	*arg;
-	int		i;
 
 	arg = program;
-	i = 0;
 	while (arg)
 	{
 		if (arg == program && ft_strchr(program->content, '|'))
