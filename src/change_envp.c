@@ -44,7 +44,8 @@ int	add_new_variable(t_mini *shell, t_list *args, t_list *envp)
 	var_array = read_variable(str);
 	if (!var_array)
 		return (1);
-	if (get_variable_by_name(shell->var_list, var_array[0]))
+	if (get_variable_by_name(shell
+	->var_list, var_array[0]))
 		change_var_value(shell->var_list, var_array[0], var_array[1]);
 	else
 		ft_lstadd_front(&shell->var_list,

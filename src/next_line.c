@@ -23,7 +23,7 @@ char	*transverse_quotes(char	*p, char *str)
 		p_1--;
 	if ((p_1 != str || (p_1 == str && (!ft_isalpha(*str)
 		&& !ft_isdigit(*str)))) && *p_1 != ' ')
-		return (p + 1);
+		return (ft_strchr(p, '=') + 1);
 	p_1 = p;
 	while (*p_1 != ' ' && p_1 != str)
 	{
@@ -37,7 +37,7 @@ char	*transverse_quotes(char	*p, char *str)
 	}
 	else
 		*(p_1 + 1) = c;
-	return (p + 2);
+	return (p_1);
 }
 
 void	quotes_after_equal(char *str)
@@ -49,15 +49,16 @@ void	quotes_after_equal(char *str)
 	{
 		if (*p == '=' && (*(p + 1) == '"' || *(p + 1) == '\'')
 			&& p != str && *(p - 1) != ' ')
+			p = transverse_quotes(p, str);
+		if (!p)
 			break ;
+		if (*p == '"' && ft_strchr(p + 1, '"'))
+			p = ft_strchr(p + 1, '"') + 1;
+		else if (*p == '\'' && ft_strchr(p + 1, '\''))
+			p = ft_strchr(p + 1, '\'') + 1;
 		p++;
 	}
-	if (!*p)
-		return ;
-	p = transverse_quotes(p, str);
-	if (ft_strchr(p, '=') && (*(ft_strchr(p, '=') + 1) == '"'
-		|| *(ft_strchr(p, '=') + 1) == '\''))
-		quotes_after_equal(p);
+	return ;
 }
 
 int	read_input(char **input, t_mini *shell, t_list *envp)
@@ -78,7 +79,7 @@ int	read_input(char **input, t_mini *shell, t_list *envp)
 	{
 		add_history(buf);
 		ft_strlcpy(*input, buf, ft_strlen(buf) + 1);
-		quotes_after_equal(*input);printf("%s\n", *input);
+		quotes_after_equal(*input);
 		return (1);
 	}
 	return (0);

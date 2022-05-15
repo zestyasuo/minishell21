@@ -26,6 +26,11 @@ char	**get_args_to_exec(t_list *lst)
 		args[i] = lst->content;
 		lst = lst->next;
 		i++;
+		if (lst && !lst->next && !ft_strlen(lst->content))
+		{
+			args[i + 1] = 0;
+			break ;
+		}
 	}
 	args[i] = 0;
 	return (args);

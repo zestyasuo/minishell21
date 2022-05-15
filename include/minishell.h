@@ -56,6 +56,7 @@ void		expand_variables(t_mini *shell);
 void		print_variable(void *pointer);
 t_variable	*new_var(char *name, char *value);
 char		**read_variable(char *str);
+void	str_remove_cage_quotes(void *content);
 
 int			create_shell(t_mini **pointer, char **envp);
 int			read_input(char **input, t_mini *shell, t_list *envp);
@@ -70,6 +71,7 @@ void		print_content(void *content);
 void		print_args(void *args);
 void		clear_content(void *lst);
 t_list		*get_variable_by_name(t_list *var_list, char *name);
+void		expand_variable(t_list *arg, t_list *var_list);
 
 void		action_branch(t_mini *shell, t_list *envp);
 void		change_var_value(t_list *env_list, char *name, char *value);

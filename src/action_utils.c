@@ -67,6 +67,8 @@ void	set_variables(t_mini *shell, t_list *envp)
 		return ;
 	while (arg_list && ft_strchr(arg_list->content, '='))
 	{
+		expand_variable(arg_list, shell->var_list);
+		str_remove_cage_quotes(arg_list->content);
 		status = add_new_variable(shell, arg_list, envp);
 		lst = arg_list;
 		arg_list = arg_list->next;
