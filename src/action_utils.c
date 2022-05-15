@@ -74,6 +74,7 @@ void	set_variables(t_mini *shell, t_list *envp)
 		free(lst->content);
 		free(lst);
 	}
+	expand_variables(shell);
 	change_var_value(shell->var_list, "?", ft_itoa(status));
 }
 

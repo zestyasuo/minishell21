@@ -66,9 +66,9 @@ void	loop_shell(t_mini *shell, t_list *envp)
 			free(input);
 			continue ;
 		}
-		set_variables(shell, envp);
 		expand_variables(shell);
 		ft_lstiter(shell->args, remove_quotes);
+		set_variables(shell, envp);
 		g_child = 1;
 		action_branch(shell, envp);
 		// ft_lstiter(shell->args, print_args);
