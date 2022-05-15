@@ -12,28 +12,32 @@
 
 #include "../include/minishell.h"
 
-/*char	*transverse_quotes(char	*p, char *str)
+char	*transverse_quotes(char	*p, char *str)
 {
 	char	*p_1;
+	char	c;
 
-	p_1 = p--;
+	c = *(ft_strchr(p, '=') + 1);
+	p_1 = p - 1;
 	while ((ft_isalpha(*p_1) || ft_isdigit(*p_1)) && p_1 != str)
 		p_1--;
-	if ((p_1 != str || (p_1 == str && (ft_isalpha(*str) || ft_isdigit(*str)))) && *p_1 != ' ')
+	if ((p_1 != str || (p_1 == str && (!ft_isalpha(*str)
+		&& !ft_isdigit(*str)))) && *p_1 != ' ')
 		return (p + 1);
 	p_1 = p;
 	while (*p_1 != ' ' && p_1 != str)
 	{
 		*(p_1 + 1) = *p_1;
+		p_1 = p_1 - 1;
 	}
-	if (p == str)
+	if (p_1 == str)
 	{
 		*(p_1 + 1) = *p_1;
-		*p = '"';
+		*p_1 = c;
 	}
 	else
-		*(p_1 + 1) = '"';
-	return (p + 1);
+		*(p_1 + 1) = c;
+	return (p + 2);
 }
 
 void	quotes_after_equal(char *str)
@@ -41,22 +45,20 @@ void	quotes_after_equal(char *str)
 	char	*p;
 
 	p = str;
-	while (*p)
+	while (p && *p)
 	{
-		if (*p == '=' && *(p + 1) == '"' && p != str && *(p - 1) != ' ')
+		if (*p == '=' && (*(p + 1) == '"' || *(p + 1) == '\'')
+			&& p != str && *(p - 1) != ' ')
 			break ;
-		if (*p == '"')
-			p = ft_strchr(p + 1, '"');
-		if (!p)
-			return ;
 		p++;
 	}
 	if (!*p)
 		return ;
 	p = transverse_quotes(p, str);
-	if (ft_strchr(p, '=') && *(ft_strchr(p, '=') + 1) == '"')
+	if (ft_strchr(p, '=') && (*(ft_strchr(p, '=') + 1) == '"'
+		|| *(ft_strchr(p, '=') + 1) == '\''))
 		quotes_after_equal(p);
-}*/
+}
 
 int	read_input(char **input, t_mini *shell, t_list *envp)
 {
@@ -76,7 +78,7 @@ int	read_input(char **input, t_mini *shell, t_list *envp)
 	{
 		add_history(buf);
 		ft_strlcpy(*input, buf, ft_strlen(buf) + 1);
-//		quotes_after_equal(*input);
+		quotes_after_equal(*input);printf("%s\n", *input);
 		return (1);
 	}
 	return (0);
