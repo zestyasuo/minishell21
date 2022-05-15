@@ -16,6 +16,8 @@ int	ft_strlen(char const *str)
 {
 	int	len;
 
+	if (!str)
+		return (0);
 	len = 0;
 	while (*str++)
 		len++;
