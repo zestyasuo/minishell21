@@ -54,8 +54,10 @@ void	quotes_after_equal(char *str)
 			break ;
 		if (*p == '"' && ft_strchr(p + 1, '"'))
 			p = ft_strchr(p + 1, '"') + 1;
-		else if (*p == '\'' && ft_strchr(p + 1, '\''))
+		else if (*p && *p == '\'' && ft_strchr(p + 1, '\''))
 			p = ft_strchr(p + 1, '\'') + 1;
+		if (!*p)
+			break ;
 		p++;
 	}
 	return ;
