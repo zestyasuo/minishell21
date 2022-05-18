@@ -3,29 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   action_branch.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/18 17:32:25 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/18 20:49:48 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-int	ft_status(int *fd, int i, int size, int *pid)
-{
-	if (fd)
-	{
-		while (i != 2 * size)
-			close(fd[i++]);
-		free(fd);
-	}
-	if (pid < 0)
-		return (127);
-	else if (WIFSIGNALED(*pid) == 1)
-		return (128 + WTERMSIG(*pid));
-	return (WEXITSTATUS(*pid));
-}
 
 char	**replace_fd(t_list *column, int *fd, int i, int size)
 {
@@ -134,6 +119,7 @@ void	action_branch(t_mini *shell, t_list *envp)
 	arg_list = (t_list *)(shell->args->content);
 	if (!arg_list || !ft_strlen(arg_list->content))
 		return ;
+	g_child = 1;
 	unset_shell_atrr();
 	fd = create_pipes(shell->args);
 	if (!fd && shell->args->next)
@@ -149,5 +135,6 @@ void	action_branch(t_mini *shell, t_list *envp)
 	else
 		status = children_to_exec(shell->args, fd, envp);
 	change_var_value(shell->var_list, "?", ft_itoa(status));
+	g_child = 0;
 	set_shell_attr();
 }

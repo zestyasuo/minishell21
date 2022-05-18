@@ -3,66 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 17:39:28 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/18 15:11:46 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/18 21:00:38 by zyasuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-int	g_child;
-
-void	interrupt(int sig)
-{
-	if (sig == SIGINT)
-	{
-		ft_printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		if (!g_child)
-			rl_redisplay();
-		g_child = 130;
-	}
-}
-
-void	set_shell_attr(void)
-{
-	struct termios		termios_p;
-	struct sigaction	sa;
-
-	sa.sa_handler = &interrupt;
-	sigaction(SIGQUIT, &sa, NULL);
-	sigaction(SIGINT, &sa, NULL);
-	tcgetattr(0, &termios_p);
-	termios_p.c_cc[VQUIT] = 0;
-	termios_p.c_cc[VINTR] = 3;
-	tcsetattr(0, 0, &termios_p);
-}
-
-void	silence_signal(int sig)
-{
-	(void) sig;
-	if (sig == SIGQUIT)
-		ft_printf("Quit\n");
-	else
-		write(1, "\n" , 1);
-}
-
-void	unset_shell_atrr(void)
-{
-	static struct termios	termios_p;
-	struct sigaction	sa;
-
-	sa.sa_handler = &silence_signal;
-	sigaction(SIGQUIT, &sa, NULL);
-	sigaction(SIGINT, &sa, NULL);
-	if (termios_p.c_cflag == 0)
-		tcgetattr(0, &termios_p);
-	else
-		tcsetattr(0, 0, &termios_p);
-}
 
 void	loop_shell(t_mini *shell, t_list *envp)
 {
@@ -87,10 +35,7 @@ void	loop_shell(t_mini *shell, t_list *envp)
 		set_variables(shell, envp);
 		expand_variables(shell);
 		ft_lstiter(shell->args, remove_quotes);
-		g_child = 1;
 		action_branch(shell, envp);
-		// ft_lstiter(shell->args, print_args);
-		g_child = 0;
 		ft_lstclear(&shell->args, clear_content);
 		free(input);
 	}

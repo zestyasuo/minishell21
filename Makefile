@@ -22,8 +22,10 @@ SRC			=	minishell.c			\
 				action_utils.c		\
 				change_in_out.c		\
 				here_doc.c			\
-				change_envp.c
-				
+				change_envp.c		\
+				action_utils_2.c	\
+				signal_utils.c		\
+
 FT_PRINTF_PATH	=	./ft_printf/include
 
 OBJ_PATH	=	objects
