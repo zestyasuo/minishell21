@@ -25,24 +25,39 @@ void	interrupt(int sig)
 			rl_redisplay();
 		g_child = 130;
 	}
-	if (sig == SIGQUIT)
-		ft_printf("Quit\n");
 }
 
 void	set_shell_attr(void)
 {
 	struct termios		termios_p;
+	struct sigaction	sa;
 
+	sa.sa_handler = &interrupt;
+	sigaction(SIGQUIT, &sa, NULL);
+	sigaction(SIGINT, &sa, NULL);
 	tcgetattr(0, &termios_p);
 	termios_p.c_cc[VQUIT] = 0;
 	termios_p.c_cc[VINTR] = 3;
 	tcsetattr(0, 0, &termios_p);
 }
 
+void	silence_signal(int sig)
+{
+	(void) sig;
+	if (sig == SIGQUIT)
+		ft_printf("Quit\n");
+	else
+		write(1, "\n" , 1);
+}
+
 void	unset_shell_atrr(void)
 {
 	static struct termios	termios_p;
+	struct sigaction	sa;
 
+	sa.sa_handler = &silence_signal;
+	sigaction(SIGQUIT, &sa, NULL);
+	sigaction(SIGINT, &sa, NULL);
 	if (termios_p.c_cflag == 0)
 		tcgetattr(0, &termios_p);
 	else
@@ -84,12 +99,8 @@ void	loop_shell(t_mini *shell, t_list *envp)
 int	main(int argc, char **argv, char **envp)
 {
 	t_mini				*shell;
-	struct sigaction	sa;
 
 	(void) argv;
-	sa.sa_handler = &interrupt;
-	sigaction(SIGINT, &sa, NULL);
-	sigaction(SIGQUIT, &sa, NULL);
 	if (argc > 1)
 		return (0 * ft_printf(ARGERROR));
 	if (create_shell(&shell, envp))
