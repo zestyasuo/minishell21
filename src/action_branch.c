@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   action_branch.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zyasuo <zyasuo@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/15 19:46:01 by zyasuo           ###   ########.fr       */
+/*   Updated: 2022/05/18 03:13:49 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,14 @@ int	children_to_exec(t_list *columns, int *fd, t_list *envp)
 		columns = columns->next;
 		i++;
 		wait(&pid);
-		if (WEXITSTATUS(pid) == 127)
+		if (WEXITSTATUS(pid) == 127 || WIFSIGNALED(pid) == 1)
 			break ;
 	}
 	close_fd(fd, size);
 	if (pid < 0)
 		return (127);
+	else if (WIFSIGNALED(pid) == 1)
+		return (128 + WTERMSIG(pid));
 	return (WEXITSTATUS(pid));
 }
 
