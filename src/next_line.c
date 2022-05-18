@@ -6,7 +6,7 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/18 19:06:03 by zyasuo            #+#    #+#             */
-/*   Updated: 2022/05/15 04:36:42 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/18 17:34:07 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*transverse_quotes(char	*p, char *str)
 	while ((ft_isalpha(*p_1) || ft_isdigit(*p_1)) && p_1 != str)
 		p_1--;
 	if ((p_1 != str || (p_1 == str && (!ft_isalpha(*str)
-		&& !ft_isdigit(*str)))) && *p_1 != ' ')
+					&& !ft_isdigit(*str)))) && *p_1 != ' ')
 		return (ft_strchr(p, '=') + 1);
 	p_1 = p;
 	while (*p_1 != ' ' && p_1 != str)

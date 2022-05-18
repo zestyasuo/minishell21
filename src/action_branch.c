@@ -6,19 +6,38 @@
 /*   By: mnathali <mnathali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 23:07:22 by mnathali          #+#    #+#             */
-/*   Updated: 2022/05/18 03:13:49 by mnathali         ###   ########.fr       */
+/*   Updated: 2022/05/18 17:32:25 by mnathali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char	**replace_fd(t_list *column, int *fd, int i)
+int	ft_status(int *fd, int i, int size, int *pid)
+{
+	if (fd)
+	{
+		while (i != 2 * size)
+			close(fd[i++]);
+		free(fd);
+	}
+	if (pid < 0)
+		return (127);
+	else if (WIFSIGNALED(*pid) == 1)
+		return (128 + WTERMSIG(*pid));
+	return (WEXITSTATUS(*pid));
+}
+
+char	**replace_fd(t_list *column, int *fd, int i, int size)
 {
 	char	**arr;
+	int		n;
 
+	n = 2;
 	arr = 0;
 	if (column->next)
 		dup2(fd[2 * i + 1], STDOUT_FILENO);
+	while (2 * i + n < 2 * size - 2)
+		close(2 * i + n++);
 	if (i)
 		dup2(fd[2 * i - 2], STDIN_FILENO);
 	while (look_var(column->content, "<") || look_var(column->content, ">")
@@ -35,7 +54,7 @@ char	**replace_fd(t_list *column, int *fd, int i)
 	return (arr);
 }
 
-void	run_bins(char **arr, t_list *envp, int *fd, int size)
+void	run_bins(char **arr, t_list *envp)
 {
 	char	**arr_envp;
 
@@ -54,7 +73,6 @@ void	run_bins(char **arr, t_list *envp, int *fd, int size)
 		perror(arr[0]);
 	free_arr(arr);
 	free_arr(arr_envp);
-	close_fd(fd, size);
 	exit(127);
 }
 
@@ -93,19 +111,18 @@ int	children_to_exec(t_list *columns, int *fd, t_list *envp)
 		if (pid < 0)
 			break ;
 		else if (pid == 0)
-			run_bins(replace_fd(columns, fd, i), envp, fd, size);
-		columns = columns->next;
+			run_bins(replace_fd(columns, fd, i, size), envp);
+		if (columns->next)
+			close(fd[2 * i + 1]);
+		if (i)
+			close(fd[2 * i - 2]);
 		i++;
+		columns = columns->next;
 		wait(&pid);
 		if (WEXITSTATUS(pid) == 127 || WIFSIGNALED(pid) == 1)
 			break ;
 	}
-	close_fd(fd, size);
-	if (pid < 0)
-		return (127);
-	else if (WIFSIGNALED(pid) == 1)
-		return (128 + WTERMSIG(pid));
-	return (WEXITSTATUS(pid));
+	return (ft_status(fd, 2 * i, size, &pid));
 }
 
 void	action_branch(t_mini *shell, t_list *envp)
